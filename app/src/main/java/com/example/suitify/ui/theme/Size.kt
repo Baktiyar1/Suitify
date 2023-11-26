@@ -30,6 +30,7 @@ val dp56 = 56.dp
 val dp62 = 62.dp
 val dp90 = 90.dp
 val dp96 = 96.dp
+val dp172 = 172.dp
 val dp180 = 180.dp
 
 // SP size

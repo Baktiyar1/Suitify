@@ -3,7 +3,7 @@ package com.example.data.mappers
 import com.example.data.models.DataMusic
 import com.example.data.models.DataPlaylist
 import com.example.data.models.DataSavedStatus
-import com.example.domain.Mapper
+import com.example.domain.base.Mapper
 import com.example.domain.models.DomainMusic
 import com.example.domain.models.DomainPlaylist
 import com.example.domain.models.DomainSavedStatus

@@ -1,11 +1,11 @@
 plugins {
-    id 'java-library'
-    id 'org.jetbrains.kotlin.jvm'
+    id("java-library")
+    id("org.jetbrains.kotlin.jvm")
 }
 
 dependencies {
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation(libs.kotlinx.coroutines.android)
 }
 
 java {

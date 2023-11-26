@@ -36,3 +36,8 @@ val BottomBarTextAndIconUnselectedColor = Color(0xFF7F8489)
 val BottomBarTextAndIconSelectedColor = Color(0xFFFFFFFF)
 
 val PlaylistItemBackground = Color(0xFF282C30)
+
+val ButtonGradientStartColor = Color(0xFF0081C9)
+val ButtonGradientEndColor = Color(0xFF11A8FD)
+
+val DialogBackgroundColor = Color(0xFF282C30)

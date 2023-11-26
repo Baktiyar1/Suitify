@@ -1,5 +1,6 @@
-package com.example.suitify.ui.screens
+package com.example.suitify.ui.screens.details
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,17 +27,19 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.suitify.R
 import com.example.suitify.models.Music
+import com.example.suitify.ui.screens.home.HomeViewModel
 import com.example.suitify.ui.theme.AppPrimaryColor
 import com.example.suitify.ui.theme.AppSecondaryColor
 import com.example.suitify.ui.theme.AuthorTextColor
-import com.example.suitify.ui.theme.MusicButtons
 import com.example.suitify.ui.theme.ImageStyleTheme
 import com.example.suitify.ui.theme.MainTextColor
+import com.example.suitify.ui.theme.MusicButtons
 import com.example.suitify.ui.theme.MusicProgressText
 import com.example.suitify.ui.theme.ProgressColor
 import com.example.suitify.ui.theme.ProgressTrackColor
@@ -58,12 +61,19 @@ import com.example.suitify.ui.theme.dp8
 import com.example.suitify.ui.theme.sp12
 import com.example.suitify.ui.theme.sp16
 import com.example.suitify.ui.theme.sp18
-import com.example.suitify.ui.viewModels.HomeViewModel
 
 @Preview(showBackground = true)
 @Composable
 fun MusicDetailsScreen(modifier: Modifier = Modifier) {
-    val music = Music(title = "Прятки", executor = "Хамали $ Наваи", duration = 423.4f)
+    val music = Music(
+        musicId = 3342,
+        title = "Прятки",
+        displayName = "QWER",
+        data = "POIUY",
+        executor = "Хамали $ Наваи",
+        uri = Uri.EMPTY,
+        duration = 423
+    )
     val playlistName = "Fav"
     Column(
         modifier = modifier
@@ -98,10 +108,9 @@ fun TopDetailsMenu(modifier: Modifier = Modifier, music: Music, playlistName: St
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TextStyleTheme(
-                modifier = modifier,
-                text = "Playing From ${fletchFromPlayingText(music.isFromPlaying)}",
-                size = sp16,
-                color = AuthorTextColor
+                modifier = modifier, text = stringResource(
+                    id = R.string.tx_playing_from, fletchFromPlayingText(music.isFromPlaying)
+                ), size = sp16, color = AuthorTextColor
             )
             TextStyleTheme(
                 modifier = modifier, text = playlistName, size = sp18, color = MainTextColor
@@ -131,7 +140,7 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             modifier = modifier
                 .size(dp180)
                 .shadow(elevation = dp16, shape = RoundedCornerShape(dp32)),
-            painter = painterResource(id = music.iconId)
+            painter = painterResource(id = music.defaultIconId)
         )
 
         Spacer(modifier = modifier.weight(1f))
@@ -171,15 +180,15 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             )
         }
 
-        val sliderPosition = remember { mutableStateOf(value = 5f) }
+        val sliderPosition = remember { mutableFloatStateOf(value = 5f) }
         val interactionSource = remember { MutableInteractionSource() }
 
         Slider(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = dp10),
-            value = sliderPosition.value,
-            onValueChange = { sliderPosition.value = it },
+            value = sliderPosition.floatValue,
+            onValueChange = { sliderPosition.floatValue = it },
             valueRange = 0f..100f,
             onValueChangeFinished = {
                 // launch some business logic update with the state you hold
@@ -206,9 +215,9 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
                 .fillMaxWidth()
                 .padding(start = dp16, end = dp16, top = dp16)
         ) {
-            MusicProgressText(text = "0:00")
+            MusicProgressText(text = stringResource(id = R.string.tx_default_time))
             Spacer(modifier = modifier.weight(1f))
-            MusicProgressText(text = "0:00")
+            MusicProgressText(text = stringResource(id = R.string.tx_default_time))
         }
 
         Row(
@@ -230,13 +239,13 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
 
             Spacer(modifier = modifier.weight(1f))
 
-            val isPlaying = viewModel.isPlaying.collectAsState()
+            val isPlaying = remember { viewModel.playingMusic.value.isPlaying }
 
             MusicButtons(
                 modifier = modifier.clickable { viewModel.onPlayingChange() },
                 boxSize = dp62,
                 imageSize = dp28,
-                imageIcon = fetchIsPlayingIdPainter(isPlaying.value)
+                imageIcon = fetchIsPlayingIdPainter(isFirstImage = isPlaying)
             )
 
             Spacer(modifier = modifier.weight(1f))
@@ -267,5 +276,6 @@ private fun fetchIsPlayingIdPainter(isFirstImage: Boolean): Int = if (isFirstIma
 else R.drawable.pause
 
 @Composable
-fun fletchFromPlayingText(isFromPlaying: Boolean): String =
-    if (isFromPlaying) "Playing" else "Main List"
+fun fletchFromPlayingText(isFromPlaylist: Boolean): String = stringResource(
+    id = if (isFromPlaylist) R.string.tx_playlist else R.string.tx_main_list
+)

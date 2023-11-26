@@ -6,7 +6,7 @@ import com.example.data.cache.models.CacheSavedStatus
 import com.example.data.models.DataMusic
 import com.example.data.models.DataPlaylist
 import com.example.data.models.DataSavedStatus
-import com.example.domain.Mapper
+import com.example.domain.base.Mapper
 import javax.inject.Inject
 
 class MapPlaylistFromDataToCache @Inject constructor(

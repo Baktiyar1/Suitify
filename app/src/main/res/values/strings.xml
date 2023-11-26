@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Suitify</string>
+    <string name="global_modal_permission_photoandmedia_descrition">Photo and media access denied</string>
+    <string name="tx_good_afternoon">Good afternoon</string>
+    <string name="tx_what_do_you_want_to_listen_to">What do you want to listen to?</string>
+    <string name="tx_like">Like</string>
+    <string name="tx_add_to_playlist">Add to playlist</string>
+    <string name="tx_share">Share</string>
+    <string name="tx_default_time">0:00</string>
+    <string name="tx_playing_from">Playing from %s</string>
+    <string name="tx_playlist">Playlist</string>
+    <string name="tx_main_list">Main list</string>
+    <string name="tx_grand_permissions">Grand permissions</string>
+    <string name="tx_ok">OK</string>
+    <string name="tx_permission_request">Permission request</string>
+    <string name="tx_audio_permission_is_permanently_declined_true">It seems you permanently declined audio permission. You can go to the app settings to grand it</string>
+    <string name="tx_audio_permission_is_permanently_declined_false">This app needs access to your audio so that your friends can hear you in a call</string>
 </resources>

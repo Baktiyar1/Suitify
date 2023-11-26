@@ -1,13 +1,18 @@
 package com.example.suitify.models
 
+import android.net.Uri
 import com.example.suitify.R
 
 data class Music(
-    val musicId: String? = null,
+    val musicId: Long,
     val title: String,
+    val displayName: String,
+    val data: String,
     val executor: String,
-    val duration: Float,
-    val iconId: Int = R.drawable.music_default,
+    val duration: Int,
+    val uri: Uri,
+    val defaultIconId: Int = R.drawable.music_default,
+    val savedStatus: SavedStatus = SavedStatus.NOT_SAVED,
     var isPlaying: Boolean = false,
     var isFavorite: Boolean = false,
     var isFromPlaying: Boolean = false,
@@ -22,10 +27,14 @@ data class Music(
 
     companion object {
         fun unknown() = Music(
-            musicId = String(),
+            musicId = Long.MIN_VALUE,
             title = String(),
+            displayName = String(),
+            data = String(),
             executor = String(),
-            duration = Float.MIN_VALUE,
+            duration = Int.MIN_VALUE,
+            uri = Uri.EMPTY,
+            savedStatus = SavedStatus.NOT_SAVED
         )
     }
 

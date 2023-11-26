@@ -7,34 +7,30 @@ import androidx.room.Query
 import com.example.data.cache.models.CacheMusic
 import com.example.data.cache.models.CacheSavedStatus
 import com.example.data.cache.models.MUSICS_TABLE_NAME
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MusicDao {
 
     @Query("select * from $MUSICS_TABLE_NAME")
-    fun fetchAllMusicsObservable(): Flow<MutableList<CacheMusic>>
+    fun fetchAllMusicsObservable(): List<CacheMusic>
 
-    @Query("select * from $MUSICS_TABLE_NAME")
-    suspend fun fetchAllMusicsSingle(): MutableList<CacheMusic>
+    @Query("select * from $MUSICS_TABLE_NAME where id == :musicId")
+    suspend fun fetchMusicFromId(musicId: String): CacheMusic
 
-    @Query("select * from $MUSICS_TABLE_NAME where id == :bookId")
-    suspend fun fetchMusicFromId(bookId: String): CacheMusic
-
-    @Query("select * from $MUSICS_TABLE_NAME where id == :bookId")
-    fun fetchMusicObservable(bookId: String): Flow<CacheMusic?>
+    @Query("select * from $MUSICS_TABLE_NAME where id == :musicId")
+    fun fetchMusicObservable(musicId: String): CacheMusic
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addNewMusic(book: CacheMusic)
+    suspend fun saveMusic(music: CacheMusic)
 
     @Query("UPDATE $MUSICS_TABLE_NAME SET title  =:title WHERE id = :id")
     suspend fun updateMusicTitle(title: String, id: String)
 
     @Query("UPDATE $MUSICS_TABLE_NAME SET executor =:executor WHERE id = :id")
-    suspend fun updateMusicAuthor(executor: String, id: String)
+    suspend fun updateMusicExecutor(executor: String, id: String)
 
-    @Query("UPDATE $MUSICS_TABLE_NAME SET icon_id =:iconId WHERE id = :id")
-    suspend fun updateMusicPoster(iconId: Int, id: String)
+    @Query("UPDATE $MUSICS_TABLE_NAME SET default_icon_id =:defaultIconId WHERE id = :id")
+    suspend fun updateMusicPoster(defaultIconId: Int, id: String)
 
     @Query("UPDATE $MUSICS_TABLE_NAME SET saved_status =:savedStatus WHERE id = :id")
     suspend fun updateCacheMusicSavedStatus(savedStatus: CacheSavedStatus, id: String)

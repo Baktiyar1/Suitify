@@ -1,5 +1,7 @@
 package com.example.domain
 
+import com.example.domain.base.Mapper
+
 sealed class RequestState<T> {
 
     class Success<T>(val data: T) : RequestState<T>()

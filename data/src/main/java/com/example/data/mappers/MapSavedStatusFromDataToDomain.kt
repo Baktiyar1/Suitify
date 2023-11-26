@@ -1,7 +1,7 @@
 package com.example.data.mappers
 
 import com.example.data.models.DataSavedStatus
-import com.example.domain.Mapper
+import com.example.domain.base.Mapper
 import com.example.domain.models.DomainSavedStatus
 import javax.inject.Inject
 

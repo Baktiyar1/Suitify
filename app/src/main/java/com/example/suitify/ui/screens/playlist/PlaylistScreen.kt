@@ -1,4 +1,4 @@
-package com.example.suitify.ui.screens
+package com.example.suitify.ui.screens.playlist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
