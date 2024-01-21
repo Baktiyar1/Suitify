@@ -1,4 +1,4 @@
-package com.example.suitify.ui
+package com.example.suitify.ui.screens.permissions
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
