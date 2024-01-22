@@ -12,7 +12,6 @@ data class DataMusic(
     val duration: Int,
     val uri: Uri,
     val defaultIconId: Int = R.drawable.music_default,
-    val isPlaying: Boolean = false,
     val isFavorite: Boolean = false,
     val isFromPlaying: Boolean = false,
     val savedStatus: DataSavedStatus = DataSavedStatus.NOT_SAVED
@@ -27,7 +26,6 @@ data class DataMusic(
             duration = 0,
             uri = Uri.EMPTY,
             defaultIconId = 0,
-            isPlaying = false,
             isFavorite = false,
             isFromPlaying = false,
             savedStatus = DataSavedStatus.NOT_SAVED,

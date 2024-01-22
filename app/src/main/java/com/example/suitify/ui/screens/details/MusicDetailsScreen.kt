@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -239,10 +240,10 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
 
             Spacer(modifier = modifier.weight(1f))
 
-            val isPlaying = remember { viewModel.playingMusic.value.isPlaying }
+            val isPlaying = viewModel.isPlaying.collectAsState().value
 
             MusicButtons(
-                modifier = modifier.clickable {  },
+                modifier = modifier.clickable { },
                 boxSize = dp62,
                 imageSize = dp28,
                 imageIcon = fetchIsPlayingIdPainter(isFirstImage = isPlaying)

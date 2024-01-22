@@ -13,7 +13,6 @@ data class Music(
     val uri: Uri,
     val defaultIconId: Int = R.drawable.music_default,
     val savedStatus: SavedStatus = SavedStatus.NOT_SAVED,
-    var isPlaying: Boolean = false,
     var isFavorite: Boolean = false,
     var isFromPlaying: Boolean = false,
 ) {

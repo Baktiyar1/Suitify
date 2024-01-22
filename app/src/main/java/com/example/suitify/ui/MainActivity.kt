@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
                         playlists = homeViewModel.playlists.collectAsState().value,
                         music = homeViewModel.playingMusic.collectAsState().value,
                         progress = homeViewModel.progress,
+                        isPlaying = homeViewModel.isPlaying.collectAsState().value,
                         isVisibleSearch = homeViewModel.isVisibleSearch.collectAsState().value,
                         isVisibleCategory = homeViewModel.isVisibleCategory.collectAsState().value,
                         searchText = homeViewModel.searchText.collectAsState().value,

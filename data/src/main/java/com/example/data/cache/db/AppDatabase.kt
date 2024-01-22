@@ -10,7 +10,7 @@ import com.example.data.cache.models.CachePlaylist
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-@Database(entities = [CacheMusic::class, CachePlaylist::class], version = 1, exportSchema = true)
+@Database(entities = [CacheMusic::class, CachePlaylist::class], version = 2, exportSchema = true)
 @TypeConverters(AppDatabase.DatabaseConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

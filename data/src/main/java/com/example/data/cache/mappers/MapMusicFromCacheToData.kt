@@ -19,7 +19,6 @@ class MapMusicFromCacheToData @Inject constructor(private val mapSavedStatus: Ma
             duration = duration,
             uri = uri,
             defaultIconId = defaultIconId,
-            isPlaying = isPlaying,
             isFavorite = isFavorite,
             savedStatus = mapSavedStatus.map(savedStatus)
         )

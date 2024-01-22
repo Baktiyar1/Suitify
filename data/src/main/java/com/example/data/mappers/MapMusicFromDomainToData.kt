@@ -21,7 +21,6 @@ class MapMusicFromDomainToData @Inject constructor(
             duration = duration,
             uri = Uri.parse(uri),
             defaultIconId = defaultIconId,
-            isPlaying = isPlaying,
             isFavorite = isFavorite,
             savedStatus = mapSavedStatus.map(savedStatus)
         )

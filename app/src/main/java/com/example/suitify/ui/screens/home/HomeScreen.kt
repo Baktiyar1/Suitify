@@ -1,6 +1,5 @@
 package com.example.suitify.ui.screens.home
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
@@ -98,6 +97,7 @@ fun HomeScreen(
     playlists: List<Playlist>,
     music: Music,
     progress: Float,
+    isPlaying: Boolean,
     isVisibleSearch: Boolean,
     isVisibleCategory: Boolean,
     searchText: String,
@@ -125,6 +125,7 @@ fun HomeScreen(
                 BottomMenu(
                     music = music,
                     progress = progress,
+                    isPlaying = isPlaying,
                     onProgress = onProgress,
                     onStart = onStart,
                     onNext = onNext
@@ -177,6 +178,7 @@ fun HomeScreen(
                 SearchView(
                     musics = musics,
                     playlists = playlists,
+                    isPlaying = isPlaying,
                     isVisibleSearch = isVisibleSearch,
                     isVisibleCategory = isVisibleCategory,
                     searchText = searchText,
@@ -242,6 +244,7 @@ fun TopMenu(
 fun SearchView(
     musics: List<Music>,
     playlists: List<Playlist>,
+    isPlaying: Boolean,
     isVisibleSearch: Boolean,
     isVisibleCategory: Boolean,
     searchText: String,
@@ -303,12 +306,22 @@ fun SearchView(
         PlaylistScreen(modifier = modifier, playlistList = playlists)
     }
     AnimatedVisibility(visible = !isVisibleCategory) {
-        MusicItemList(modifier = modifier, onItemClick = onItemClick, musics = musics)
+        MusicItemList(
+            musics = musics,
+            isPlaying = isPlaying,
+            onItemClick = onItemClick,
+            modifier = modifier
+        )
     }
 }
 
 @Composable
-fun MusicItemList(musics: List<Music>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier) {
+fun MusicItemList(
+    musics: List<Music>,
+    isPlaying: Boolean,
+    onItemClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -323,16 +336,22 @@ fun MusicItemList(musics: List<Music>, onItemClick: (Int) -> Unit, modifier: Mod
     ) {
         itemsIndexed(items = musics) { index, music ->
             MusicItem(
-                modifier = modifier,
+                music = music,
+                isPlaying = isPlaying,
                 onItemClick = { onItemClick(index) },
-                music = music
+                modifier = modifier,
             )
         }
     }
 }
 
 @Composable
-fun MusicItem(music: Music, onItemClick: () -> Unit, modifier: Modifier = Modifier) {
+fun MusicItem(
+    music: Music,
+    isPlaying: Boolean,
+    onItemClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(modifier = modifier
         .fillMaxWidth()
         .padding(horizontal = dp16, vertical = dp10)
@@ -354,7 +373,6 @@ fun MusicItem(music: Music, onItemClick: () -> Unit, modifier: Modifier = Modifi
                 .padding(dp05)
                 .shadow(elevation = dp16, shape = RoundedCornerShape(dp26))
                 .background(color = MusicItemBackgroundColor)
-                .clickable(onClick = {})
         ) {
             Box(modifier = modifier.padding(start = dp20, top = dp20, bottom = dp20)) {
                 Image(
@@ -371,7 +389,7 @@ fun MusicItem(music: Music, onItemClick: () -> Unit, modifier: Modifier = Modifi
                 )
 
                 Image(
-                    painter = fetchIsPlayingPainter(isFirstImage = music.isPlaying),
+                    painter = fetchIsPlayingPainter(isFirstImage = isPlaying),
                     contentDescription = null,
                     alignment = Alignment.Center,
                     modifier = modifier.align(alignment = Alignment.Center)
@@ -428,6 +446,7 @@ fun MusicItem(music: Music, onItemClick: () -> Unit, modifier: Modifier = Modifi
 fun BottomMenu(
     music: Music,
     progress: Float,
+    isPlaying: Boolean,
     onProgress: (Float) -> Unit,
     onStart: () -> Unit,
     onNext: () -> Unit,
@@ -452,17 +471,12 @@ fun BottomMenu(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                val isPlayingImage = remember { mutableStateOf(music.isPlaying) }
-
                 ImageStyleTheme(
                     modifier = modifier
                         .padding(end = dp16)
                         .size(dp20)
-                        .clickable {
-                            onStart()
-                            isPlayingImage.value = !isPlayingImage.value
-                        },
-                    painter = fetchIsPlayingPainter(isFirstImage = isPlayingImage.value)
+                        .clickable { onStart() },
+                    painter = fetchIsPlayingPainter(isFirstImage = isPlaying)
                 )
 
                 val isFavoriteImage = remember { mutableStateOf(music.isFavorite) }

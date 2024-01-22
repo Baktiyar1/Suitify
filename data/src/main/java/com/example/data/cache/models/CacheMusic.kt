@@ -9,7 +9,7 @@ import com.example.data.R
 
 const val MUSICS_TABLE_NAME = "musics_table"
 
-@Entity(tableName = MUSICS_TABLE_NAME, indices = [Index("id"), Index("is_playing", "id")])
+@Entity(tableName = MUSICS_TABLE_NAME, indices = [Index("id")])
 data class CacheMusic(
     @PrimaryKey @ColumnInfo(name = "id") val musicId: Long,
     @ColumnInfo(name = "title") val title: String,
@@ -19,7 +19,6 @@ data class CacheMusic(
     @ColumnInfo(name = "duration") val duration: Int,
     @ColumnInfo(name = "uri") val uri: Uri,
     @ColumnInfo(name = "default_icon_id") val defaultIconId: Int = R.drawable.music_default,
-    @ColumnInfo(name = "is_playing") val isPlaying: Boolean = false,
     @ColumnInfo(name = "is_favorite") val isFavorite: Boolean = false,
     @ColumnInfo(name = "is_from_playing") val isFromPlaying: Boolean = false,
     @ColumnInfo(name = "saved_status") val savedStatus: CacheSavedStatus = CacheSavedStatus.NOT_SAVED,

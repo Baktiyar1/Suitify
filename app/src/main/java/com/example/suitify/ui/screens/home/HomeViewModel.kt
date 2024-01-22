@@ -18,6 +18,7 @@ import com.example.domain.base.Mapper
 import com.example.domain.formatDuration
 import com.example.domain.models.DomainMusic
 import com.example.domain.use_cases.FetchAllMusicsObservableUseCase
+import com.example.suitify.R
 import com.example.suitify.models.Music
 import com.example.suitify.models.Playlist
 import com.example.suitify.player.services.MusicPlayerEvent
@@ -47,6 +48,9 @@ class HomeViewModel @Inject constructor(
 
     var progress by savedStateHandle.saveable { mutableFloatStateOf(DEFAULT_FLOAT) }
 
+    private val _isPlaying = MutableStateFlow(false)
+    val isPlaying = _isPlaying.asStateFlow()
+
     private val _searchText = MutableStateFlow(value = EMPTY_STRING)
     val searchText = _searchText.asStateFlow()
 
@@ -59,13 +63,16 @@ class HomeViewModel @Inject constructor(
     private val _playingMusic = MutableStateFlow(value = Music.unknown())
     val playingMusic = _playingMusic.asStateFlow()
 
+    private val allMusic = MutableStateFlow(emptyList<Music>())
     private val _musics = MutableStateFlow(emptyList<Music>())
     val musics = _searchText.combine(_musics) { text, musics ->
-        if (text.isBlank()) musics
+        val filterMusic = if (text.isBlank()) musics
         else musics.filter { it.doesMatchSearchQuery(text) }
+        setMediaItems(filterMusic)
+        filterMusic
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _musics.value)
 
-    private val _playlists = MutableStateFlow(listOf<Playlist>())
+    private val _playlists = MutableStateFlow(startPlaylist)
     val playlists = _searchText.combine(_playlists) { text, playlists ->
         if (text.isBlank()) playlists else playlists.filter { it.doesMatchSearchQuery(text) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), _playlists.value)
@@ -80,7 +87,7 @@ class HomeViewModel @Inject constructor(
                 when (it) {
                     is MusicState.Initial -> Unit
                     is MusicState.Buffering -> calculateProgressValue(it.progress)
-                    is MusicState.Playing -> playingMusic.value.isPlaying = it.isPlaying
+                    is MusicState.Playing -> _isPlaying.tryEmit(it.isPlaying)
                     is MusicState.Progress -> calculateProgressValue(it.progress)
                     is MusicState.CurrentPlaying -> _playingMusic.tryEmit(musics.value[it.mediaItemIndex])
                     is MusicState.Ready -> duration = it.duration
@@ -129,12 +136,13 @@ class HomeViewModel @Inject constructor(
                 false -> Unit
             }
             if (_musics.value.isNotEmpty()) _playingMusic.tryEmit(_musics.value[0])
-            setMediaItems()
+            allMusic.value = _musics.value
+            setMediaItems(_musics.value)
         }
     }
 
-    private fun setMediaItems() {
-        _musics.value.map { music ->
+    private fun setMediaItems(musics: List<Music>) {
+        musics.map { music ->
             MediaItem.Builder()
                 .setUri(music.uri)
                 .setMediaMetadata(
@@ -152,5 +160,18 @@ class HomeViewModel @Inject constructor(
         progress = if (currentProgress <= 0) DEFAULT_FLOAT
         else (currentProgress.toFloat() / duration.toFloat() * 100f)
         progressString = formatDuration(currentProgress)
+    }
+
+    companion object {
+        const val ADD_PLAYLIST_ID = "ADD_PLAYLIST_ID"
+        private const val ADD_PLAYLIST_NAME = "Add playlist"
+        private val startPlaylist = listOf(
+            Playlist(
+                id = ADD_PLAYLIST_ID,
+                name = ADD_PLAYLIST_NAME,
+                iconId = R.drawable.default_playlist,
+                musics = emptyList(),
+            )
+        )
     }
 }

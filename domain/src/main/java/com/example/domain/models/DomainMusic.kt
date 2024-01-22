@@ -9,7 +9,6 @@ data class DomainMusic(
     val duration: Int,
     val uri: String,
     val defaultIconId: Int = 0,
-    val isPlaying: Boolean = false,
     val isFavorite: Boolean = false,
     val isFromPlaying: Boolean = false,
     val savedStatus: DomainSavedStatus = DomainSavedStatus.NOT_SAVED,
