@@ -3,20 +3,25 @@ package com.example.data.cache.source.music
 import com.example.data.cache.db.MusicDao
 import com.example.data.cache.models.CacheMusic
 import com.example.data.cache.models.CacheSavedStatus
+import com.example.data.cache.source.local.ContentResolverHelper
 import com.example.data.models.DataMusic
 import com.example.data.models.DataSavedStatus
+import com.example.domain.DispatchersProvider
 import com.example.domain.base.Mapper
 import javax.inject.Inject
 
 class MusicCacheDataSourceImpl @Inject constructor(
     private val musicDao: MusicDao,
+    private val contentResolverHelper: ContentResolverHelper,
     private val mapMusicCacheToData: Mapper<CacheMusic, DataMusic>,
     private val mapMusicListCacheToData: Mapper<List<CacheMusic>, List<DataMusic>>,
     private val mapMusicDataToCache: Mapper<DataMusic, CacheMusic>,
     private val mapSavedStatusDataToCache: Mapper<DataSavedStatus, CacheSavedStatus>
 ) : MusicCacheDataSource {
-    override fun fetchAllMusics(): List<DataMusic> =
-        mapMusicListCacheToData.map(musicDao.fetchAllMusicsObservable())
+    override suspend fun fetchAllMusics(): List<DataMusic> = contentResolverHelper.getAudioData()
+//        .filterNot { it in musicDao.fetchAllMusicsObservable() }
+//        .onEach { musicDao.saveMusic(it) }
+        .let(mapMusicListCacheToData::map)
 
     override fun fetchMusic(musicId: String): DataMusic =
         mapMusicCacheToData.map(musicDao.fetchMusicObservable(musicId = musicId))

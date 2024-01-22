@@ -6,7 +6,7 @@ import com.example.domain.models.DomainSavedStatus
 
 interface MusicRepository {
     fun fletchAllLocalMusic(): Result<List<DomainMusic>>
-    fun fetchAllMusicsObservable(): Result<List<DomainMusic>>
+    suspend fun fetchAllMusicsObservable(): Result<List<DomainMusic>>
     fun fetchMusicObservable(musicId: String): Result<DomainMusic>
     suspend fun fetchMusicFromId(musicId: String): Result<DomainMusic>
     suspend fun saveMusics(musics: List<DomainMusic>)

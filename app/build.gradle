@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("dagger.hilt.android.plugin")
-    id("androidx.navigation.safeargs")
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.com.google.dagger.hilt.android)
+//    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -59,27 +59,26 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation platform("org.jetbrains.kotlin:kotlin-bom:$vr_kotlin_bom")
+    implementation platform(libs.kotlin.bom)
     // Base Compose
     implementation(libs.androidx.activity.compose)
-    implementation platform("androidx.compose:compose-bom:$vr_compose_bom")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    androidTestImplementation platform("androidx.compose:compose-bom:$vr_compose_bom")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation platform(libs.compose.bom)
+    implementation(libs.compose.ui.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.ui.compose.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.dynamic.features.fragment)
     // Material 3
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material3:material3-window-size-class:$vr_material3_window_size_class")
+    implementation(libs.compose.material3)
     // Lifecycle View Model Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     // Hilt
-    implementation(libs.hilt.android)
+    implementation(libs.android.hilt)
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -93,7 +92,13 @@ dependencies {
     // Accompanist Permissions
     implementation(libs.accompanist.permissions)
     // Coroutine
-    implementation libs.kotlinx.coroutines.core
-    implementation libs.kotlinx.coroutines.android
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    // Media3
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.session)
+    // Glide
+    implementation(libs.glide)
 
 }

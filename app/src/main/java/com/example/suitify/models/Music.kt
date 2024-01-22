@@ -8,7 +8,7 @@ data class Music(
     val title: String,
     val displayName: String,
     val data: String,
-    val executor: String,
+    val artist: String,
     val duration: Int,
     val uri: Uri,
     val defaultIconId: Int = R.drawable.music_default,
@@ -19,10 +19,10 @@ data class Music(
 ) {
 
     fun doesMatchSearchQuery(query: String): Boolean = listOf(
-        "$title$executor",
-        "$title $executor",
-        "${title.first()}${executor.first()}",
-        "${title.first()} ${executor.first()}",
+        "$title$artist",
+        "$title $artist",
+        "${title.first()}${artist.first()}",
+        "${title.first()} ${artist.first()}",
     ).any { it.contains(query, ignoreCase = true) }
 
     companion object {
@@ -31,7 +31,7 @@ data class Music(
             title = String(),
             displayName = String(),
             data = String(),
-            executor = String(),
+            artist = String(),
             duration = Int.MIN_VALUE,
             uri = Uri.EMPTY,
             savedStatus = SavedStatus.NOT_SAVED

@@ -6,5 +6,5 @@ import com.example.domain.repositories.MusicRepository
 
 class FetchAllMusicsObservableUseCaseImpl(private val repository: MusicRepository) :
     FetchAllMusicsObservableUseCase {
-    override fun invoke(): Result<List<DomainMusic>> = repository.fetchAllMusicsObservable()
+    override suspend fun invoke(): Result<List<DomainMusic>> = repository.fetchAllMusicsObservable()
 }

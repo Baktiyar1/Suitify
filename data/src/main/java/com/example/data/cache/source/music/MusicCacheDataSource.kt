@@ -5,7 +5,7 @@ import com.example.data.models.DataSavedStatus
 
 interface MusicCacheDataSource {
 
-    fun fetchAllMusics(): List<DataMusic>
+    suspend fun fetchAllMusics(): List<DataMusic>
 
     fun fetchMusic(musicId: String): DataMusic
 
