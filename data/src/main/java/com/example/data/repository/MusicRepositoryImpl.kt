@@ -30,9 +30,13 @@ class MusicRepositoryImpl @Inject constructor(
 
     override fun fletchAllLocalMusic(): Result<List<DomainMusic>> = try {
         val musics = mutableListOf<DataMusic>()
-        val cursor: Cursor? = context.contentResolver.query(URI, PROJECTION, SELECTION, SELECTION_ARGS, SORT_ORDER)
+        val cursor: Cursor? =
+            context.contentResolver.query(URI, PROJECTION, SELECTION, SELECTION_ARGS, SORT_ORDER)
         cursor?.use {
-            if (it.count == 0) Log.e(APPLICATION_ERROR_LOG_KEY, DEFAULT_ERROR_LOG_MESSAGE)
+            if (it.count == 0) Log.e(
+                APPLICATION_ERROR_LOG_KEY,
+                "MusicRepositoryImpl fletchAllLocalMusic: $DEFAULT_ERROR_LOG_MESSAGE"
+            )
             else while (it.moveToNext()) musics.add(
                 DataMusic(
                     musicId = getCursorLong(it),
@@ -47,28 +51,40 @@ class MusicRepositoryImpl @Inject constructor(
         }
         Result.Success(data = mapMusicListDataToDomain.map(musics))
     } catch (e: Exception) {
-        Log.e(APPLICATION_ERROR_LOG_KEY, e.message ?: DEFAULT_ERROR_MESSAGE)
+        Log.e(
+            APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fletchAllLocalMusic: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+        )
         Result.Error(DEFAULT_ERROR_MESSAGE)
     }
 
-    override fun fetchAllMusicsObservable(): Result<List<DomainMusic>> = try {
+    override suspend fun fetchAllMusicsObservable(): Result<List<DomainMusic>> = try {
         Result.Success(data = mapMusicListDataToDomain.map(cacheDataSource.fetchAllMusics()))
     } catch (e: Exception) {
-        Log.e(APPLICATION_ERROR_LOG_KEY, e.message ?: DEFAULT_ERROR_MESSAGE)
+        Log.e(
+            APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fetchAllMusicsObservable: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+        )
         Result.Error(DEFAULT_ERROR_MESSAGE)
     }
 
     override fun fetchMusicObservable(musicId: String): Result<DomainMusic> = try {
         Result.Success(data = mapMusicDataToDomain.map(cacheDataSource.fetchMusic(musicId = musicId)))
     } catch (e: Exception) {
-        Log.e(APPLICATION_ERROR_LOG_KEY, e.message ?: DEFAULT_ERROR_MESSAGE)
+        Log.e(
+            APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fetchMusicObservable: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+        )
         Result.Error(DEFAULT_ERROR_MESSAGE)
     }
 
     override suspend fun fetchMusicFromId(musicId: String): Result<DomainMusic> = try {
         Result.Success(mapMusicDataToDomain.map(cacheDataSource.fetchMusicFromId(musicId = musicId)))
     } catch (e: Exception) {
-        Log.e(APPLICATION_ERROR_LOG_KEY, e.message ?: DEFAULT_ERROR_MESSAGE)
+        Log.e(
+            APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fetchMusicFromId: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+        )
         Result.Error(DEFAULT_ERROR_MESSAGE)
     }
 
@@ -108,8 +124,8 @@ class MusicRepositoryImpl @Inject constructor(
         private val URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         private const val SELECTION = "${MediaStore.Audio.AudioColumns.IS_MUSIC} = ?"
         private val SELECTION_ARGS = arrayOf("1")
-        private const val SORT_ORDER = "${MediaStore.Audio.AudioColumns.DISPLAY_NAME} ASC"
         private const val DISPLAY_NAME = MediaStore.Audio.AudioColumns.DISPLAY_NAME
+        private const val SORT_ORDER = "$DISPLAY_NAME ASC"
         private const val ID = MediaStore.Audio.AudioColumns._ID
         private const val ARTIST = MediaStore.Audio.AudioColumns.ARTIST
         private const val DATA = MediaStore.Audio.AudioColumns.DATA

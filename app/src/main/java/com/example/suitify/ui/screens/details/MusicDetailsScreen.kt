@@ -70,7 +70,7 @@ fun MusicDetailsScreen(modifier: Modifier = Modifier) {
         title = "Прятки",
         displayName = "QWER",
         data = "POIUY",
-        executor = "Хамали $ Наваи",
+        artist = "Хамали $ Наваи",
         uri = Uri.EMPTY,
         duration = 423
     )
@@ -157,7 +157,7 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
                 )
                 TextStyleTheme(
                     modifier = modifier.padding(top = dp8),
-                    text = music.executor,
+                    text = music.artist,
                     size = sp12,
                     color = AuthorTextColor
                 )
@@ -242,7 +242,7 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             val isPlaying = remember { viewModel.playingMusic.value.isPlaying }
 
             MusicButtons(
-                modifier = modifier.clickable { viewModel.onPlayingChange() },
+                modifier = modifier.clickable {  },
                 boxSize = dp62,
                 imageSize = dp28,
                 imageIcon = fetchIsPlayingIdPainter(isFirstImage = isPlaying)

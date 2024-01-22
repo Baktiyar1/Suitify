@@ -1,5 +1,6 @@
 package com.example.suitify.ui.screens.home
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
@@ -20,7 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,8 +32,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,6 +49,7 @@ import androidx.compose.ui.unit.DpSize
 import com.example.suitify.R
 import com.example.suitify.models.BottomSheet
 import com.example.suitify.models.Music
+import com.example.suitify.models.Playlist
 import com.example.suitify.ui.extention.advancedShadow
 import com.example.suitify.ui.extention.fadingEdge
 import com.example.suitify.ui.screens.playlist.PlaylistScreen
@@ -93,7 +93,23 @@ import com.example.suitify.ui.theme.sp18
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    musics: List<Music>,
+    playlists: List<Playlist>,
+    music: Music,
+    progress: Float,
+    isVisibleSearch: Boolean,
+    isVisibleCategory: Boolean,
+    searchText: String,
+    onProgress: (Float) -> Unit,
+    onItemClick: (Int) -> Unit,
+    onStart: () -> Unit,
+    onNext: () -> Unit,
+    onSearchTextChange: (String) -> Unit,
+    onSearchVisibilityChange: (Boolean) -> Unit,
+    onCategoryVisibilityChange: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     BottomSheetScaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = Color.Transparent,
@@ -106,7 +122,13 @@ fun HomeScreen(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
                 modifier = modifier.padding(start = dp16, end = dp16, bottom = dp14),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                BottomMenu(viewModel = viewModel)
+                BottomMenu(
+                    music = music,
+                    progress = progress,
+                    onProgress = onProgress,
+                    onStart = onStart,
+                    onNext = onNext
+                )
 
                 Spacer(modifier = modifier.padding(top = dp16))
 
@@ -145,8 +167,24 @@ fun HomeScreen(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
                     .weight(12f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TopMenu(modifier = modifier, viewModel = viewModel)
-                SearchView(modifier = modifier, viewModel = viewModel)
+                TopMenu(
+                    isVisibleSearch = isVisibleSearch,
+                    isVisibleCategory = isVisibleCategory,
+                    onCategoryVisibilityChange = onCategoryVisibilityChange,
+                    onSearchVisibilityChange = onSearchVisibilityChange,
+                    modifier = modifier,
+                )
+                SearchView(
+                    musics = musics,
+                    playlists = playlists,
+                    isVisibleSearch = isVisibleSearch,
+                    isVisibleCategory = isVisibleCategory,
+                    searchText = searchText,
+                    onItemClick = onItemClick,
+                    onSearchTextChange = onSearchTextChange,
+                    onSearchVisibilityChange = onSearchVisibilityChange,
+                    modifier = modifier
+                )
                 Spacer(modifier = modifier.weight(1f))
             }
         }
@@ -154,7 +192,13 @@ fun HomeScreen(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TopMenu(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
+fun TopMenu(
+    isVisibleSearch: Boolean,
+    isVisibleCategory: Boolean,
+    onSearchVisibilityChange: (Boolean) -> Unit,
+    onCategoryVisibilityChange: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -171,14 +215,14 @@ fun TopMenu(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
         Spacer(modifier = modifier.weight(5f))
 
         AnimatedVisibility(
-            visible = !viewModel.isVisibleSearch.collectAsState().value,
+            visible = !isVisibleSearch,
             enter = fadeIn(tween()) + expandHorizontally(animationSpec = tween()),
             exit = fadeOut(tween()) + shrinkVertically(animationSpec = tween())
         ) {
             MusicButtons(
                 modifier = modifier
                     .padding(end = dp24)
-                    .clickable { viewModel.onSearchVisibilityChange(isVisibleChange = true) },
+                    .clickable { onSearchVisibilityChange(true) },
                 boxSize = dp44,
                 imageSize = dp20,
                 imageIcon = R.drawable.search,
@@ -186,17 +230,27 @@ fun TopMenu(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
         }
 
         MusicButtons(
-            modifier = modifier.clickable { viewModel.onCategoryVisibilityChange() },
+            modifier = modifier.clickable { onCategoryVisibilityChange() },
             boxSize = dp44,
             imageSize = dp20,
-            imageIcon = fetchCategoryPainter(viewModel.isVisibleCategory.collectAsState().value),
+            imageIcon = fetchCategoryPainter(isVisibleCategory),
         )
     }
 }
 
 @Composable
-fun SearchView(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
-    AnimatedVisibility(visible = viewModel.isVisibleSearch.collectAsState().value) {
+fun SearchView(
+    musics: List<Music>,
+    playlists: List<Playlist>,
+    isVisibleSearch: Boolean,
+    isVisibleCategory: Boolean,
+    searchText: String,
+    onItemClick: (Int) -> Unit,
+    onSearchTextChange: (String) -> Unit,
+    onSearchVisibilityChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(visible = isVisibleSearch) {
         Box(
             modifier = modifier
                 .padding(top = dp8, start = dp16, end = dp16, bottom = dp24)
@@ -222,18 +276,15 @@ fun SearchView(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
                     disabledIndicatorColor = SearchColor,
                     unfocusedLabelColor = SearchColor,
                 ),
-                value = viewModel.searchText.collectAsState().value,
-                onValueChange = viewModel::onSearchTextChange,
+                value = searchText,
+                onValueChange = { onSearchTextChange(it) },
                 singleLine = true,
                 leadingIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.search),
                         contentDescription = null,
                         modifier = modifier
-                            .clickable {
-                                viewModel.fetchAllLocalMusic()
-                                viewModel.onSearchVisibilityChange(isVisibleChange = false)
-                            }
+                            .clickable { onSearchVisibilityChange(false) }
                             .background(color = Color.Transparent))
                 },
                 placeholder = {
@@ -248,18 +299,16 @@ fun SearchView(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
         }
     }
 
-    AnimatedVisibility(visible = viewModel.isVisibleCategory.collectAsState().value) {
-        PlaylistScreen(
-            modifier = modifier, playlistList = viewModel.playlists.collectAsState().value
-        )
+    AnimatedVisibility(visible = isVisibleCategory) {
+        PlaylistScreen(modifier = modifier, playlistList = playlists)
     }
-    AnimatedVisibility(visible = !viewModel.isVisibleCategory.collectAsState().value) {
-        MusicItemList(modifier = modifier, musics = viewModel.musics.collectAsState().value)
+    AnimatedVisibility(visible = !isVisibleCategory) {
+        MusicItemList(modifier = modifier, onItemClick = onItemClick, musics = musics)
     }
 }
 
 @Composable
-fun MusicItemList(musics: List<Music>, modifier: Modifier = Modifier) {
+fun MusicItemList(musics: List<Music>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth()
@@ -272,12 +321,18 @@ fun MusicItemList(musics: List<Music>, modifier: Modifier = Modifier) {
                 )
             )
     ) {
-        items(items = musics) { music -> MusicItem(modifier = modifier, music = music) }
+        itemsIndexed(items = musics) { index, music ->
+            MusicItem(
+                modifier = modifier,
+                onItemClick = { onItemClick(index) },
+                music = music
+            )
+        }
     }
 }
 
 @Composable
-fun MusicItem(music: Music, modifier: Modifier = Modifier) {
+fun MusicItem(music: Music, onItemClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(modifier = modifier
         .fillMaxWidth()
         .padding(horizontal = dp16, vertical = dp10)
@@ -292,7 +347,7 @@ fun MusicItem(music: Music, modifier: Modifier = Modifier) {
         )
         .clickable(
             interactionSource = remember { MutableInteractionSource() }, indication = null
-        ) {}) {
+        ) { onItemClick() }) {
         Row(
             modifier = modifier
                 .fillMaxSize()
@@ -359,7 +414,7 @@ fun MusicItem(music: Music, modifier: Modifier = Modifier) {
 
                 TextStyleTheme(
                     modifier = modifier.padding(top = dp4),
-                    text = music.executor,
+                    text = music.artist,
                     size = sp12,
                     color = AuthorTextColor
                 )
@@ -370,8 +425,14 @@ fun MusicItem(music: Music, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomMenu(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
-    val music = viewModel.playingMusic.collectAsState().value
+fun BottomMenu(
+    music: Music,
+    progress: Float,
+    onProgress: (Float) -> Unit,
+    onStart: () -> Unit,
+    onNext: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -391,14 +452,16 @@ fun BottomMenu(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                val isPlayingImage =
-                    remember { mutableStateOf(viewModel.playingMusic.value.isPlaying) }
+                val isPlayingImage = remember { mutableStateOf(music.isPlaying) }
 
                 ImageStyleTheme(
                     modifier = modifier
                         .padding(end = dp16)
                         .size(dp20)
-                        .clickable { isPlayingImage.value = !isPlayingImage.value },
+                        .clickable {
+                            onStart()
+                            isPlayingImage.value = !isPlayingImage.value
+                        },
                     painter = fetchIsPlayingPainter(isFirstImage = isPlayingImage.value)
                 )
 
@@ -414,26 +477,23 @@ fun BottomMenu(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
                         }, painter = fetchFavoritePainter(isFirstImage = isFavoriteImage.value)
                 )
 
-                val isVolumeImage = remember { mutableStateOf(viewModel.isVolume.value) }
-
                 ImageStyleTheme(
                     modifier = modifier
                         .size(dp20)
-                        .clickable { isVolumeImage.value = !isVolumeImage.value },
-                    painter = fetchVolumePainter(isFirstImage = isVolumeImage.value)
+                        .clickable { onNext() },
+                    painter = painterResource(id = R.drawable.next)
                 )
             }
 
-            val sliderPosition = remember { mutableFloatStateOf(value = 0.05f) }
             val interactionSource = remember { MutableInteractionSource() }
 
             Slider(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(top = dp12),
-                value = sliderPosition.floatValue,
-                onValueChange = { sliderPosition.floatValue = it },
-                valueRange = 0f..1f,
+                value = progress,
+                onValueChange = { onProgress(it) },
+                valueRange = 0f..100f,
                 onValueChangeFinished = {
                     // launch some business logic update with the state you hold
                     // viewModel.updateSelectedSliderValue(sliderPosition)
@@ -473,7 +533,7 @@ private fun MusicPlayInfo(music: Music, modifier: Modifier = Modifier) {
 
         TextStyleTheme(
             modifier = modifier.padding(top = dp4),
-            text = music.executor,
+            text = music.artist,
             size = sp12,
             color = AuthorTextColor
         )

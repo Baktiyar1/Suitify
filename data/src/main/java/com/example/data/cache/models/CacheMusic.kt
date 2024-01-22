@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.data.R
 
 const val MUSICS_TABLE_NAME = "musics_table"
 
@@ -17,9 +18,9 @@ data class CacheMusic(
     @ColumnInfo(name = "data") val data: String,
     @ColumnInfo(name = "duration") val duration: Int,
     @ColumnInfo(name = "uri") val uri: Uri,
-    @ColumnInfo(name = "default_icon_id") val defaultIconId: Int,
-    @ColumnInfo(name = "is_playing") val isPlaying: Boolean,
-    @ColumnInfo(name = "is_favorite") val isFavorite: Boolean,
+    @ColumnInfo(name = "default_icon_id") val defaultIconId: Int = R.drawable.music_default,
+    @ColumnInfo(name = "is_playing") val isPlaying: Boolean = false,
+    @ColumnInfo(name = "is_favorite") val isFavorite: Boolean = false,
     @ColumnInfo(name = "is_from_playing") val isFromPlaying: Boolean = false,
-    @ColumnInfo(name = "saved_status") val savedStatus: CacheSavedStatus,
+    @ColumnInfo(name = "saved_status") val savedStatus: CacheSavedStatus = CacheSavedStatus.NOT_SAVED,
 )

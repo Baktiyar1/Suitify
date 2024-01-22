@@ -16,7 +16,7 @@ class MapMusicFromUiToDomain @Inject constructor(
             title = title,
             displayName = displayName,
             data = data,
-            executor = executor,
+            executor = artist,
             duration = duration,
             uri = uri.toString(),
             defaultIconId = defaultIconId,
