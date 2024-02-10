@@ -6,18 +6,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.suitify.player.services.MusicService
+import com.example.core_ui.theme.SuitifyTheme
+import com.example.player.service.MusicService
 import com.example.suitify.ui.screens.home.HomeScreen
 import com.example.suitify.ui.screens.home.HomeViewModel
-import com.example.suitify.ui.screens.home.UiEvents
+import com.example.suitify.ui.screens.home.models.HomeUiStateModel
+import com.example.suitify.ui.screens.home.models.UiEvents
 import com.example.suitify.ui.screens.permissions.PermissionScreen
 import com.example.suitify.ui.screens.permissions.PermissionViewModel
-import com.example.suitify.ui.theme.SuitifyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var isServiceRunning = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,16 +30,22 @@ class MainActivity : ComponentActivity() {
                 if (viewModel.isGrantedPermission.collectAsState().value) {
                     val homeViewModel: HomeViewModel = viewModel()
                     HomeScreen(
-                        musics = homeViewModel.musics.collectAsState().value,
-                        playlists = homeViewModel.playlists.collectAsState().value,
-                        music = homeViewModel.playingMusic.collectAsState().value,
-                        progress = homeViewModel.progress,
-                        isPlaying = homeViewModel.isPlaying.collectAsState().value,
-                        isVisibleSearch = homeViewModel.isVisibleSearch.collectAsState().value,
-                        isVisibleCategory = homeViewModel.isVisibleCategory.collectAsState().value,
-                        searchText = homeViewModel.searchText.collectAsState().value,
-                        onSearchTextChange = { homeViewModel.onUiEvents(UiEvents.SearchTextChange(it)) },
-                        onCategoryVisibilityChange = { homeViewModel.onUiEvents(UiEvents.CategoryVisibilityChange) },
+                        homeUiStateModel = HomeUiStateModel(
+                            musics = homeViewModel.musics.collectAsState().value,
+                            playlists = homeViewModel.playlists.collectAsState().value,
+                            music = homeViewModel.playingMusic.collectAsState().value,
+                            progress = homeViewModel.progress,
+                            isPlaying = homeViewModel.isPlaying.collectAsState().value,
+                            isVisibleSearch = homeViewModel.isVisibleSearch.collectAsState().value,
+                            isVisibleCategory = homeViewModel.isVisibleCategory.collectAsState().value,
+                            searchText = homeViewModel.searchText.collectAsState().value
+                        ),
+                        onSearchTextChange = {
+                            homeViewModel.onUiEvents(UiEvents.SearchTextChange(it))
+                        },
+                        onCategoryVisibilityChange = {
+                            homeViewModel.onUiEvents(UiEvents.CategoryVisibilityChange)
+                        },
                         onNext = { homeViewModel.onUiEvents(UiEvents.SeekToNext) },
                         onProgress = { homeViewModel.onUiEvents(UiEvents.SeekTo(it)) },
                         onStart = { homeViewModel.onUiEvents(UiEvents.PlayPause) },

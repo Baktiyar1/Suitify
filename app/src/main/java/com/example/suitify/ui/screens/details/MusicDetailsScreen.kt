@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,64 +30,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.suitify.R
+import com.example.core_ui.theme.AppPrimaryColor
+import com.example.core_ui.theme.AppSecondaryColor
+import com.example.core_ui.theme.AuthorTextColor
+import com.example.core_ui.theme.ImageStyleTheme
+import com.example.core_ui.theme.MainTextColor
+import com.example.core_ui.theme.MusicButtons
+import com.example.core_ui.theme.MusicProgressText
+import com.example.core_ui.theme.ProgressColor
+import com.example.core_ui.theme.ProgressTrackColor
+import com.example.core_ui.theme.TextStyleTheme
+import com.example.core_ui.theme.dp10
+import com.example.core_ui.theme.dp16
+import com.example.core_ui.theme.dp18
+import com.example.core_ui.theme.dp180
+import com.example.core_ui.theme.dp20
+import com.example.core_ui.theme.dp24
+import com.example.core_ui.theme.dp28
+import com.example.core_ui.theme.dp32
+import com.example.core_ui.theme.dp4
+import com.example.core_ui.theme.dp42
+import com.example.core_ui.theme.dp44
+import com.example.core_ui.theme.dp52
+import com.example.core_ui.theme.dp62
+import com.example.core_ui.theme.dp8
+import com.example.core_ui.theme.sp12
+import com.example.core_ui.theme.sp16
+import com.example.core_ui.theme.sp18
+import com.example.core_ui.R
 import com.example.suitify.models.Music
-import com.example.suitify.ui.screens.home.HomeViewModel
-import com.example.suitify.ui.theme.AppPrimaryColor
-import com.example.suitify.ui.theme.AppSecondaryColor
-import com.example.suitify.ui.theme.AuthorTextColor
-import com.example.suitify.ui.theme.ImageStyleTheme
-import com.example.suitify.ui.theme.MainTextColor
-import com.example.suitify.ui.theme.MusicButtons
-import com.example.suitify.ui.theme.MusicProgressText
-import com.example.suitify.ui.theme.ProgressColor
-import com.example.suitify.ui.theme.ProgressTrackColor
-import com.example.suitify.ui.theme.TextStyleTheme
-import com.example.suitify.ui.theme.dp10
-import com.example.suitify.ui.theme.dp16
-import com.example.suitify.ui.theme.dp18
-import com.example.suitify.ui.theme.dp180
-import com.example.suitify.ui.theme.dp20
-import com.example.suitify.ui.theme.dp24
-import com.example.suitify.ui.theme.dp28
-import com.example.suitify.ui.theme.dp32
-import com.example.suitify.ui.theme.dp4
-import com.example.suitify.ui.theme.dp42
-import com.example.suitify.ui.theme.dp44
-import com.example.suitify.ui.theme.dp52
-import com.example.suitify.ui.theme.dp62
-import com.example.suitify.ui.theme.dp8
-import com.example.suitify.ui.theme.sp12
-import com.example.suitify.ui.theme.sp16
-import com.example.suitify.ui.theme.sp18
-
-@Preview(showBackground = true)
-@Composable
-fun MusicDetailsScreen(modifier: Modifier = Modifier) {
-    val music = Music(
-        musicId = 3342,
-        title = "Прятки",
-        displayName = "QWER",
-        data = "POIUY",
-        artist = "Хамали $ Наваи",
-        uri = Uri.EMPTY,
-        duration = 423
-    )
-    val playlistName = "Fav"
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    0.0f to AppPrimaryColor, 1.0f to AppSecondaryColor, startY = 0.0f, endY = 500f
-                )
-            ), horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TopDetailsMenu(modifier = modifier, music = music, playlistName = playlistName)
-        MusicPlayerScreen(modifier = modifier, music = music)
-    }
-}
 
 @Composable
 fun TopDetailsMenu(modifier: Modifier = Modifier, music: Music, playlistName: String) {
@@ -109,19 +79,28 @@ fun TopDetailsMenu(modifier: Modifier = Modifier, music: Music, playlistName: St
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TextStyleTheme(
-                modifier = modifier, text = stringResource(
+                modifier = modifier,
+                text = stringResource(
                     id = R.string.tx_playing_from, fletchFromPlayingText(music.isFromPlaying)
-                ), size = sp16, color = AuthorTextColor
+                ),
+                size = sp16,
+                color = AuthorTextColor
             )
             TextStyleTheme(
-                modifier = modifier, text = playlistName, size = sp18, color = MainTextColor
+                modifier = modifier,
+                text = playlistName,
+                size = sp18,
+                color = MainTextColor
             )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         MusicButtons(
-            modifier = modifier, boxSize = dp44, imageSize = dp20, imageIcon = R.drawable.menu
+            modifier = modifier,
+            boxSize = dp44,
+            imageSize = dp20,
+            imageIcon = R.drawable.menu
         )
     }
 }
@@ -129,7 +108,6 @@ fun TopDetailsMenu(modifier: Modifier = Modifier, music: Music, playlistName: St
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
-    val viewModel = viewModel<HomeViewModel>()
     Column(
         modifier = modifier.padding(horizontal = dp16),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -226,7 +204,10 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             MusicButtons(
-                modifier = modifier, boxSize = dp42, imageSize = dp18, imageIcon = R.drawable.group
+                modifier = modifier,
+                boxSize = dp42,
+                imageSize = dp18,
+                imageIcon = R.drawable.group
             )
 
             Spacer(modifier = modifier.weight(1f))
@@ -240,7 +221,7 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
 
             Spacer(modifier = modifier.weight(1f))
 
-            val isPlaying = viewModel.isPlaying.collectAsState().value
+            val isPlaying = false
 
             MusicButtons(
                 modifier = modifier.clickable { },
@@ -252,7 +233,10 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             Spacer(modifier = modifier.weight(1f))
 
             MusicButtons(
-                modifier = modifier, boxSize = dp52, imageSize = dp24, imageIcon = R.drawable.next
+                modifier = modifier,
+                boxSize = dp52,
+                imageSize = dp24,
+                imageIcon = R.drawable.next
             )
 
             Spacer(modifier = modifier.weight(1f))
@@ -280,3 +264,33 @@ else R.drawable.pause
 fun fletchFromPlayingText(isFromPlaylist: Boolean): String = stringResource(
     id = if (isFromPlaylist) R.string.tx_playlist else R.string.tx_main_list
 )
+
+@Preview(showBackground = true)
+@Composable
+fun MusicDetailsScreen(modifier: Modifier = Modifier) {
+    val music = Music(
+        musicId = 3342,
+        title = "Прятки",
+        displayName = "QWER",
+        data = "POIUY",
+        artist = "Хамали $ Наваи",
+        uri = Uri.EMPTY,
+        duration = 423
+    )
+    val playlistName = "Fav"
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    0.0f to AppPrimaryColor,
+                    1.0f to AppSecondaryColor,
+                    startY = 0.0f,
+                    endY = 500f
+                )
+            ), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TopDetailsMenu(modifier = modifier, music = music, playlistName = playlistName)
+        MusicPlayerScreen(modifier = modifier, music = music)
+    }
+}

@@ -13,11 +13,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
-import com.example.data.utils.LAUNCHED_EFFECT_AUDIO_PERMISSION_KEY
+import com.example.core.LAUNCHED_EFFECT_AUDIO_PERMISSION_KEY
+import com.example.core_ui.extention.openAppSettings
+import com.example.core_ui.theme.AppPrimaryColor
 import com.example.suitify.ui.dialog.AudioPermissionTextProvides
 import com.example.suitify.ui.dialog.PermissionDialog
-import com.example.suitify.ui.extention.openAppSettings
-import com.example.suitify.ui.theme.AppPrimaryColor
 
 @Composable
 fun PermissionScreen(viewModel: PermissionViewModel, activity: Activity) {

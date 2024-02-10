@@ -3,10 +3,10 @@ package com.example.domain
 import java.util.concurrent.TimeUnit
 
 const val UNKNOWN_TEXT = "Unknown"
-const val DEFAULT_TIME_TEXT = "00:00"
 
 const val DEFAULT_LONG = 0L
 const val DEFAULT_FLOAT = 0f
+const val DEFAULT_INT = 0
 
 fun formatDuration(duration: Long): String {
     val minute = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)

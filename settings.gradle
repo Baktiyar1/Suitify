@@ -19,3 +19,6 @@ rootProject.name = "Suitify"
 include ':app'
 include ':domain'
 include ':data'
+include ':player'
+include ':core'
+include ':core:core_ui'

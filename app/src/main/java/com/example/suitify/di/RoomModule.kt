@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.example.data.cache.db.AppDatabase
 import com.example.data.cache.db.MusicDao
 import com.example.data.cache.db.PlaylistDao
-import com.example.data.utils.APP_DATABASE_NAME
+import com.example.core.APP_DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +19,7 @@ object RoomModule {
     @Provides
     @Singleton
     fun provideAppDatabase(context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, APP_DATABASE_NAME)
+        Room.databaseBuilder(context, AppDatabase::class.java, com.example.core.APP_DATABASE_NAME)
             .fallbackToDestructiveMigration().build()
 
     @Provides

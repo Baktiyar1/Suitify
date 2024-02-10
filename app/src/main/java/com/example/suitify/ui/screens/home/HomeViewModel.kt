@@ -1,8 +1,8 @@
 package com.example.suitify.ui.screens.home
 
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,20 +10,20 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.example.data.utils.EMPTY_STRING
+import com.example.core.EMPTY_STRING
 import com.example.domain.DEFAULT_FLOAT
+import com.example.domain.DEFAULT_INT
 import com.example.domain.DEFAULT_LONG
-import com.example.domain.DEFAULT_TIME_TEXT
 import com.example.domain.base.Mapper
-import com.example.domain.formatDuration
 import com.example.domain.models.DomainMusic
 import com.example.domain.use_cases.FetchAllMusicsObservableUseCase
-import com.example.suitify.R
+import com.example.player.service.MusicPlayerEvent
+import com.example.player.service.MusicServiceHandler
+import com.example.player.service.MusicState
+import com.example.core_ui.R
 import com.example.suitify.models.Music
 import com.example.suitify.models.Playlist
-import com.example.suitify.player.services.MusicPlayerEvent
-import com.example.suitify.player.services.MusicServiceHandler
-import com.example.suitify.player.services.MusicState
+import com.example.suitify.ui.screens.home.models.UiEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,7 +44,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var duration by savedStateHandle.saveable { mutableLongStateOf(DEFAULT_LONG) }
-    private var progressString by savedStateHandle.saveable { mutableStateOf(DEFAULT_TIME_TEXT) }
+    private var mediaItemIndex by savedStateHandle.saveable { mutableIntStateOf(DEFAULT_INT) }
 
     var progress by savedStateHandle.saveable { mutableFloatStateOf(DEFAULT_FLOAT) }
 
@@ -89,8 +89,11 @@ class HomeViewModel @Inject constructor(
                     is MusicState.Buffering -> calculateProgressValue(it.progress)
                     is MusicState.Playing -> _isPlaying.tryEmit(it.isPlaying)
                     is MusicState.Progress -> calculateProgressValue(it.progress)
-                    is MusicState.CurrentPlaying -> _playingMusic.tryEmit(musics.value[it.mediaItemIndex])
                     is MusicState.Ready -> duration = it.duration
+                    is MusicState.CurrentPlaying -> {
+                        mediaItemIndex = it.mediaItemIndex
+                        _playingMusic.tryEmit(musics.value[mediaItemIndex])
+                    }
                 }
             }
         }
@@ -99,12 +102,17 @@ class HomeViewModel @Inject constructor(
     fun onUiEvents(uiEvents: UiEvents) = viewModelScope.launch {
         when (uiEvents) {
             UiEvents.PlayPause -> musicServicesHandler.onPlayerEvents(MusicPlayerEvent.PlayPause)
-            UiEvents.SeekToNext -> musicServicesHandler.onPlayerEvents(MusicPlayerEvent.SeekToNext)
             UiEvents.Backward -> musicServicesHandler.onPlayerEvents(MusicPlayerEvent.Backward)
             UiEvents.Forward -> musicServicesHandler.onPlayerEvents(MusicPlayerEvent.Forward)
+            UiEvents.FavoriteChange -> _playingMusic.tryEmit(_playingMusic.value.copy(isFavorite = !_playingMusic.value.isFavorite))
             UiEvents.CategoryVisibilityChange -> onCategoryVisibilityChange()
             is UiEvents.SearchTextChange -> _searchText.tryEmit(uiEvents.searchText)
             is UiEvents.SearchVisibilityChange -> _isVisibleSearch.tryEmit(uiEvents.isVisibleChange)
+            UiEvents.SeekToNext -> {
+                _playingMusic.tryEmit(_musics.value[++mediaItemIndex])
+                musicServicesHandler.onPlayerEvents(MusicPlayerEvent.SeekToNext)
+            }
+
             is UiEvents.SelectedMusicChange -> musicServicesHandler.onPlayerEvents(
                 MusicPlayerEvent.SelectedMusicChange,
                 selectedMusicIndex = uiEvents.index
@@ -159,7 +167,6 @@ class HomeViewModel @Inject constructor(
     private fun calculateProgressValue(currentProgress: Long) {
         progress = if (currentProgress <= 0) DEFAULT_FLOAT
         else (currentProgress.toFloat() / duration.toFloat() * 100f)
-        progressString = formatDuration(currentProgress)
     }
 
     companion object {

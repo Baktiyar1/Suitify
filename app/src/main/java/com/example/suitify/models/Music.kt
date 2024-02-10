@@ -1,7 +1,7 @@
 package com.example.suitify.models
 
 import android.net.Uri
-import com.example.suitify.R
+import com.example.core_ui.R
 
 data class Music(
     val musicId: Long,

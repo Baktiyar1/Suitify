@@ -53,6 +53,10 @@ dependencies {
 
     implementation project(path: ":data")
     implementation project(path: ":domain")
+    implementation project(path: ":player")
+    implementation project(path: ":core")
+    implementation project(path: ":core:core_ui")
+
     // Core KTX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -77,6 +81,7 @@ dependencies {
     implementation(libs.compose.material3)
     // Lifecycle View Model Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     // Hilt
     implementation(libs.android.hilt)
     ksp(libs.hilt.android.compiler)
@@ -98,7 +103,5 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.session)
-    // Glide
-    implementation(libs.glide)
 
 }

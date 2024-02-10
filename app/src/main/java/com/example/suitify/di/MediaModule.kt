@@ -8,8 +8,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.session.MediaSession
 import com.example.domain.DispatchersProvider
-import com.example.suitify.player.notification.MusicNotificationManager
-import com.example.suitify.player.services.MusicServiceHandler
+import com.example.player.notification.MusicNotificationManager
+import com.example.player.service.MusicServiceHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

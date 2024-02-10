@@ -45,62 +45,61 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.DpSize
-import com.example.suitify.R
+import com.example.core_ui.R
+import com.example.core_ui.extention.advancedShadow
+import com.example.core_ui.extention.fadingEdge
+import com.example.core_ui.theme.AppPrimaryColor
+import com.example.core_ui.theme.AppSecondaryColor
+import com.example.core_ui.theme.AuthorTextColor
+import com.example.core_ui.theme.BottomSheetBackgroundColor
+import com.example.core_ui.theme.ButtonColor
+import com.example.core_ui.theme.ButtonShadowColor
+import com.example.core_ui.theme.ImageStyleTheme
+import com.example.core_ui.theme.MainTextColor
+import com.example.core_ui.theme.MusicButtons
+import com.example.core_ui.theme.MusicItemBackgroundColor
+import com.example.core_ui.theme.MusicItemGradientFirstColor
+import com.example.core_ui.theme.MusicItemGradientSecondColor
+import com.example.core_ui.theme.PlaylistItemBackground
+import com.example.core_ui.theme.ProgressColor
+import com.example.core_ui.theme.ProgressTrackColor
+import com.example.core_ui.theme.SearchColor
+import com.example.core_ui.theme.TextStyleTheme
+import com.example.core_ui.theme.dp05
+import com.example.core_ui.theme.dp10
+import com.example.core_ui.theme.dp12
+import com.example.core_ui.theme.dp14
+import com.example.core_ui.theme.dp16
+import com.example.core_ui.theme.dp172
+import com.example.core_ui.theme.dp2
+import com.example.core_ui.theme.dp20
+import com.example.core_ui.theme.dp24
+import com.example.core_ui.theme.dp26
+import com.example.core_ui.theme.dp32
+import com.example.core_ui.theme.dp4
+import com.example.core_ui.theme.dp42
+import com.example.core_ui.theme.dp44
+import com.example.core_ui.theme.dp8
+import com.example.core_ui.theme.dp90
+import com.example.core_ui.theme.sp12
+import com.example.core_ui.theme.sp14
+import com.example.core_ui.theme.sp16
+import com.example.core_ui.theme.sp18
 import com.example.suitify.models.BottomSheet
 import com.example.suitify.models.Music
-import com.example.suitify.models.Playlist
-import com.example.suitify.ui.extention.advancedShadow
-import com.example.suitify.ui.extention.fadingEdge
+import com.example.suitify.ui.screens.home.models.HomeUiStateModel
+import com.example.suitify.ui.screens.home.models.ScreenBottomMenuModel
+import com.example.suitify.ui.screens.home.models.ScreenMusicItemListModel
+import com.example.suitify.ui.screens.home.models.ScreenMusicItemModel
+import com.example.suitify.ui.screens.home.models.ScreenPlaylistModel
+import com.example.suitify.ui.screens.home.models.ScreenSearchModel
+import com.example.suitify.ui.screens.home.models.ScreenTopMenuModel
 import com.example.suitify.ui.screens.playlist.PlaylistScreen
-import com.example.suitify.ui.theme.AppPrimaryColor
-import com.example.suitify.ui.theme.AppSecondaryColor
-import com.example.suitify.ui.theme.AuthorTextColor
-import com.example.suitify.ui.theme.BottomSheetBackgroundColor
-import com.example.suitify.ui.theme.ButtonColor
-import com.example.suitify.ui.theme.ButtonShadowColor
-import com.example.suitify.ui.theme.ImageStyleTheme
-import com.example.suitify.ui.theme.MainTextColor
-import com.example.suitify.ui.theme.MusicButtons
-import com.example.suitify.ui.theme.MusicItemBackgroundColor
-import com.example.suitify.ui.theme.MusicItemGradientFirstColor
-import com.example.suitify.ui.theme.MusicItemGradientSecondColor
-import com.example.suitify.ui.theme.PlaylistItemBackground
-import com.example.suitify.ui.theme.ProgressColor
-import com.example.suitify.ui.theme.ProgressTrackColor
-import com.example.suitify.ui.theme.SearchColor
-import com.example.suitify.ui.theme.TextStyleTheme
-import com.example.suitify.ui.theme.dp05
-import com.example.suitify.ui.theme.dp10
-import com.example.suitify.ui.theme.dp12
-import com.example.suitify.ui.theme.dp14
-import com.example.suitify.ui.theme.dp16
-import com.example.suitify.ui.theme.dp172
-import com.example.suitify.ui.theme.dp2
-import com.example.suitify.ui.theme.dp20
-import com.example.suitify.ui.theme.dp24
-import com.example.suitify.ui.theme.dp26
-import com.example.suitify.ui.theme.dp32
-import com.example.suitify.ui.theme.dp4
-import com.example.suitify.ui.theme.dp42
-import com.example.suitify.ui.theme.dp44
-import com.example.suitify.ui.theme.dp8
-import com.example.suitify.ui.theme.dp90
-import com.example.suitify.ui.theme.sp12
-import com.example.suitify.ui.theme.sp14
-import com.example.suitify.ui.theme.sp16
-import com.example.suitify.ui.theme.sp18
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    musics: List<Music>,
-    playlists: List<Playlist>,
-    music: Music,
-    progress: Float,
-    isPlaying: Boolean,
-    isVisibleSearch: Boolean,
-    isVisibleCategory: Boolean,
-    searchText: String,
+    homeUiStateModel: HomeUiStateModel,
     onProgress: (Float) -> Unit,
     onItemClick: (Int) -> Unit,
     onStart: () -> Unit,
@@ -123,9 +122,11 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 BottomMenu(
-                    music = music,
-                    progress = progress,
-                    isPlaying = isPlaying,
+                    screenBottomMenuModel = ScreenBottomMenuModel(
+                        music = homeUiStateModel.music,
+                        progress = homeUiStateModel.progress,
+                        isPlaying = homeUiStateModel.isPlaying
+                    ),
                     onProgress = onProgress,
                     onStart = onStart,
                     onNext = onNext
@@ -158,7 +159,8 @@ fun HomeScreen(
         Column(
             modifier = modifier.background(
                 brush = Brush.verticalGradient(
-                    0.0f to AppPrimaryColor, 1.0f to AppSecondaryColor, startY = 0.0f, endY = 500f
+                    colorStops = arrayOf(0.0f to AppPrimaryColor, 1.0f to AppSecondaryColor),
+                    startY = 0.0f, endY = 500f
                 )
             ), horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -169,19 +171,24 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TopMenu(
-                    isVisibleSearch = isVisibleSearch,
-                    isVisibleCategory = isVisibleCategory,
+                    screenTopMenuModel = ScreenTopMenuModel(
+                        isVisibleSearch = homeUiStateModel.isVisibleSearch,
+                        isVisibleCategory = homeUiStateModel.isVisibleCategory
+                    ),
                     onCategoryVisibilityChange = onCategoryVisibilityChange,
                     onSearchVisibilityChange = onSearchVisibilityChange,
                     modifier = modifier,
                 )
                 SearchView(
-                    musics = musics,
-                    playlists = playlists,
-                    isPlaying = isPlaying,
-                    isVisibleSearch = isVisibleSearch,
-                    isVisibleCategory = isVisibleCategory,
-                    searchText = searchText,
+                    screenSearchModel = ScreenSearchModel(
+                        musics = homeUiStateModel.musics,
+                        playlists = homeUiStateModel.playlists,
+                        nowPlayingMusicId = homeUiStateModel.music.musicId,
+                        isPlaying = homeUiStateModel.isPlaying,
+                        isVisibleSearch = homeUiStateModel.isVisibleSearch,
+                        isVisibleCategory = homeUiStateModel.isVisibleCategory,
+                        searchText = homeUiStateModel.searchText,
+                    ),
                     onItemClick = onItemClick,
                     onSearchTextChange = onSearchTextChange,
                     onSearchVisibilityChange = onSearchVisibilityChange,
@@ -195,8 +202,7 @@ fun HomeScreen(
 
 @Composable
 fun TopMenu(
-    isVisibleSearch: Boolean,
-    isVisibleCategory: Boolean,
+    screenTopMenuModel: ScreenTopMenuModel,
     onSearchVisibilityChange: (Boolean) -> Unit,
     onCategoryVisibilityChange: () -> Unit,
     modifier: Modifier = Modifier
@@ -217,7 +223,7 @@ fun TopMenu(
         Spacer(modifier = modifier.weight(5f))
 
         AnimatedVisibility(
-            visible = !isVisibleSearch,
+            visible = !screenTopMenuModel.isVisibleSearch,
             enter = fadeIn(tween()) + expandHorizontally(animationSpec = tween()),
             exit = fadeOut(tween()) + shrinkVertically(animationSpec = tween())
         ) {
@@ -235,37 +241,32 @@ fun TopMenu(
             modifier = modifier.clickable { onCategoryVisibilityChange() },
             boxSize = dp44,
             imageSize = dp20,
-            imageIcon = fetchCategoryPainter(isVisibleCategory),
+            imageIcon = fetchCategoryPainter(screenTopMenuModel.isVisibleCategory),
         )
     }
 }
 
 @Composable
 fun SearchView(
-    musics: List<Music>,
-    playlists: List<Playlist>,
-    isPlaying: Boolean,
-    isVisibleSearch: Boolean,
-    isVisibleCategory: Boolean,
-    searchText: String,
+    screenSearchModel: ScreenSearchModel,
     onItemClick: (Int) -> Unit,
     onSearchTextChange: (String) -> Unit,
     onSearchVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(visible = isVisibleSearch) {
+    AnimatedVisibility(visible = screenSearchModel.isVisibleSearch) {
         Box(
             modifier = modifier
                 .padding(top = dp8, start = dp16, end = dp16, bottom = dp24)
                 .advancedShadow(color = ButtonShadowColor, shadowBlurRadius = dp32)
-                .shadow(elevation = dp16, RoundedCornerShape(dp32))
+                .shadow(elevation = dp16, shape = RoundedCornerShape(dp32))
                 .background(color = Color.Transparent)
         ) {
             TextField(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(dp2)
-                    .shadow(elevation = dp16, RoundedCornerShape(dp32))
+                    .shadow(elevation = dp16, shape = RoundedCornerShape(dp32))
                     .background(color = Color.Transparent),
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = AuthorTextColor,
@@ -279,7 +280,7 @@ fun SearchView(
                     disabledIndicatorColor = SearchColor,
                     unfocusedLabelColor = SearchColor,
                 ),
-                value = searchText,
+                value = screenSearchModel.searchText,
                 onValueChange = { onSearchTextChange(it) },
                 singleLine = true,
                 leadingIcon = {
@@ -302,13 +303,19 @@ fun SearchView(
         }
     }
 
-    AnimatedVisibility(visible = isVisibleCategory) {
-        PlaylistScreen(modifier = modifier, playlistList = playlists)
+    AnimatedVisibility(visible = screenSearchModel.isVisibleCategory) {
+        PlaylistScreen(
+            modifier = modifier,
+            screenPlaylistModel = ScreenPlaylistModel(playlist = screenSearchModel.playlists)
+        )
     }
-    AnimatedVisibility(visible = !isVisibleCategory) {
+    AnimatedVisibility(visible = !screenSearchModel.isVisibleCategory) {
         MusicItemList(
-            musics = musics,
-            isPlaying = isPlaying,
+            screenMusicItemListModel = ScreenMusicItemListModel(
+                musics = screenSearchModel.musics,
+                isPlaying = screenSearchModel.isPlaying,
+                nowPlayingMusicId = screenSearchModel.nowPlayingMusicId,
+            ),
             onItemClick = onItemClick,
             modifier = modifier
         )
@@ -317,8 +324,7 @@ fun SearchView(
 
 @Composable
 fun MusicItemList(
-    musics: List<Music>,
-    isPlaying: Boolean,
+    screenMusicItemListModel: ScreenMusicItemListModel,
     onItemClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -334,10 +340,13 @@ fun MusicItemList(
                 )
             )
     ) {
-        itemsIndexed(items = musics) { index, music ->
+        itemsIndexed(items = screenMusicItemListModel.musics) { index, music ->
             MusicItem(
-                music = music,
-                isPlaying = isPlaying,
+                screenMusicItemModel = ScreenMusicItemModel(
+                    music = music,
+                    isPlaying = screenMusicItemListModel.isPlaying,
+                    isNowPlayingMusic = music.musicId == screenMusicItemListModel.nowPlayingMusicId,
+                ),
                 onItemClick = { onItemClick(index) },
                 modifier = modifier,
             )
@@ -347,11 +356,11 @@ fun MusicItemList(
 
 @Composable
 fun MusicItem(
-    music: Music,
-    isPlaying: Boolean,
+    screenMusicItemModel: ScreenMusicItemModel,
     onItemClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val music = screenMusicItemModel.music
     Box(modifier = modifier
         .fillMaxWidth()
         .padding(horizontal = dp16, vertical = dp10)
@@ -365,8 +374,10 @@ fun MusicItem(
             )
         )
         .clickable(
-            interactionSource = remember { MutableInteractionSource() }, indication = null
-        ) { onItemClick() }) {
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
+        )
+        { onItemClick() }) {
         Row(
             modifier = modifier
                 .fillMaxSize()
@@ -374,7 +385,9 @@ fun MusicItem(
                 .shadow(elevation = dp16, shape = RoundedCornerShape(dp26))
                 .background(color = MusicItemBackgroundColor)
         ) {
-            Box(modifier = modifier.padding(start = dp20, top = dp20, bottom = dp20)) {
+            Box(
+                modifier = modifier.padding(start = dp20, top = dp20, bottom = dp20)
+            ) {
                 Image(
                     painter = painterResource(id = music.defaultIconId),
                     contentDescription = null,
@@ -389,16 +402,14 @@ fun MusicItem(
                 )
 
                 Image(
-                    painter = fetchIsPlayingPainter(isFirstImage = isPlaying),
+                    painter = fetchIsPlayingPainter(isFirstImage = screenMusicItemModel.isPlaying && screenMusicItemModel.isNowPlayingMusic),
                     contentDescription = null,
                     alignment = Alignment.Center,
                     modifier = modifier.align(alignment = Alignment.Center)
                 )
             }
 
-            Column(
-                modifier = modifier.padding(start = dp12, top = dp20, bottom = dp20, end = dp20)
-            ) {
+            Column(modifier = modifier.padding(horizontal = dp12, vertical = dp20)) {
                 Row(modifier = modifier) {
                     Spacer(modifier = modifier.weight(5f))
 
@@ -444,14 +455,13 @@ fun MusicItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomMenu(
-    music: Music,
-    progress: Float,
-    isPlaying: Boolean,
+    screenBottomMenuModel: ScreenBottomMenuModel,
     onProgress: (Float) -> Unit,
     onStart: () -> Unit,
     onNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val music = screenBottomMenuModel.music
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -476,7 +486,7 @@ fun BottomMenu(
                         .padding(end = dp16)
                         .size(dp20)
                         .clickable { onStart() },
-                    painter = fetchIsPlayingPainter(isFirstImage = isPlaying)
+                    painter = fetchIsPlayingPainter(isFirstImage = screenBottomMenuModel.isPlaying)
                 )
 
                 val isFavoriteImage = remember { mutableStateOf(music.isFavorite) }
@@ -505,7 +515,7 @@ fun BottomMenu(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(top = dp12),
-                value = progress,
+                value = screenBottomMenuModel.progress,
                 onValueChange = { onProgress(it) },
                 valueRange = 0f..100f,
                 onValueChangeFinished = {
@@ -542,7 +552,10 @@ private fun MusicPlayInfo(music: Music, modifier: Modifier = Modifier) {
 
     Column(modifier = modifier.padding(start = dp8)) {
         TextStyleTheme(
-            modifier = modifier, text = music.title, size = sp12, color = MainTextColor
+            modifier = modifier,
+            text = music.title,
+            size = sp12,
+            color = MainTextColor
         )
 
         TextStyleTheme(

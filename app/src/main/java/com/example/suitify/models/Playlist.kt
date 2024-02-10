@@ -1,6 +1,6 @@
 package com.example.suitify.models
 
-import com.example.suitify.R
+import com.example.core_ui.R
 
 data class Playlist(
     val id: String? = null,

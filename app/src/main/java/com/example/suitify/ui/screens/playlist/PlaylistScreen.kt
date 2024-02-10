@@ -26,36 +26,38 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import com.example.suitify.R
+import com.example.core_ui.theme.MainTextColor
+import com.example.core_ui.theme.MusicItemGradientFirstColor
+import com.example.core_ui.theme.MusicItemGradientSecondColor
+import com.example.core_ui.theme.PlaylistItemBackground
+import com.example.core_ui.theme.dp05
+import com.example.core_ui.theme.dp12
+import com.example.core_ui.theme.dp16
+import com.example.core_ui.theme.dp21
+import com.example.core_ui.theme.dp26
+import com.example.core_ui.theme.dp56
+import com.example.core_ui.theme.dp8
+import com.example.core_ui.theme.sp11
 import com.example.suitify.models.Playlist
-import com.example.suitify.ui.theme.MainTextColor
-import com.example.suitify.ui.theme.MusicItemGradientFirstColor
-import com.example.suitify.ui.theme.MusicItemGradientSecondColor
-import com.example.suitify.ui.theme.PlaylistItemBackground
-import com.example.suitify.ui.theme.dp05
-import com.example.suitify.ui.theme.dp12
-import com.example.suitify.ui.theme.dp16
-import com.example.suitify.ui.theme.dp21
-import com.example.suitify.ui.theme.dp26
-import com.example.suitify.ui.theme.dp56
-import com.example.suitify.ui.theme.dp8
-import com.example.suitify.ui.theme.sp11
+import com.example.suitify.ui.screens.home.models.ScreenPlaylistModel
 
 @Composable
-fun PlaylistScreen(modifier: Modifier = Modifier, playlistList: List<Playlist>) {
+fun PlaylistScreen(screenPlaylistModel: ScreenPlaylistModel, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(color = Color.Transparent)
     ) {
         LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = modifier.padding(dp8)) {
-            items(items = playlistList) { data -> PlaylistItem(modifier = modifier, data) }
+            items(items = screenPlaylistModel.playlist) { data ->
+                PlaylistItem(playlist = data, modifier = modifier)
+            }
         }
     }
 }
 
 @Composable
-fun PlaylistItem(modifier: Modifier = Modifier, playlist: Playlist) {
+fun PlaylistItem(playlist: Playlist, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -92,8 +94,8 @@ fun PlaylistItem(modifier: Modifier = Modifier, playlist: Playlist) {
                     text = playlist.name,
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(top = dp21, bottom = dp21, start = dp12, end = dp12),
-                    style = TextStyle(fontStyle = FontStyle(R.font.urbanist_black)),
+                        .padding(vertical = dp21, horizontal = dp12),
+                    style = TextStyle(fontStyle = FontStyle(com.example.core_ui.R.font.urbanist_black)),
                     fontSize = sp11,
                     color = MainTextColor,
                     maxLines = 1

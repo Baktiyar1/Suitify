@@ -19,18 +19,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
-import com.example.suitify.R
-import com.example.suitify.ui.theme.ButtonGradientEndColor
-import com.example.suitify.ui.theme.ButtonGradientStartColor
-import com.example.suitify.ui.theme.DialogBackgroundColor
-import com.example.suitify.ui.theme.MainCardColor
-import com.example.suitify.ui.theme.MainTextColor
-import com.example.suitify.ui.theme.MusicTopMixItemBackgroundColor
-import com.example.suitify.ui.theme.dp2
-import com.example.suitify.ui.theme.dp21
-import com.example.suitify.ui.theme.dp26
-import com.example.suitify.ui.theme.dp32
-import com.example.suitify.ui.theme.dp8
+import com.example.core_ui.R
+import com.example.core_ui.theme.ButtonGradientEndColor
+import com.example.core_ui.theme.ButtonGradientStartColor
+import com.example.core_ui.theme.DialogBackgroundColor
+import com.example.core_ui.theme.MainCardColor
+import com.example.core_ui.theme.MainTextColor
+import com.example.core_ui.theme.MusicTopMixItemBackgroundColor
+import com.example.core_ui.theme.dp2
+import com.example.core_ui.theme.dp21
+import com.example.core_ui.theme.dp26
+import com.example.core_ui.theme.dp32
+import com.example.core_ui.theme.dp8
 
 @Composable
 fun PermissionDialog(

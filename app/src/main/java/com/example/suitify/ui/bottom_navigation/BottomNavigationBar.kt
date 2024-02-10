@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.suitify.ui.theme.BottomBarColor
-import com.example.suitify.ui.theme.BottomBarTextAndIconSelectedColor
-import com.example.suitify.ui.theme.BottomBarTextAndIconUnselectedColor
+import com.example.core_ui.theme.BottomBarColor
+import com.example.core_ui.theme.BottomBarTextAndIconSelectedColor
+import com.example.core_ui.theme.BottomBarTextAndIconUnselectedColor
 
 @Composable
 fun BottomNavigationBar(

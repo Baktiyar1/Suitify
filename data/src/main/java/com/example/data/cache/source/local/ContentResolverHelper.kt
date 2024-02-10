@@ -7,7 +7,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.data.cache.models.CacheMusic
-import com.example.data.utils.APPLICATION_ERROR_LOG_KEY
+import com.example.core.APPLICATION_ERROR_LOG_KEY
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

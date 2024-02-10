@@ -8,9 +8,9 @@ import android.util.Log
 import com.example.data.cache.source.music.MusicCacheDataSource
 import com.example.data.models.DataMusic
 import com.example.data.models.DataSavedStatus
-import com.example.data.utils.APPLICATION_ERROR_LOG_KEY
-import com.example.data.utils.DEFAULT_ERROR_LOG_MESSAGE
-import com.example.data.utils.DEFAULT_ERROR_MESSAGE
+import com.example.core.APPLICATION_ERROR_LOG_KEY
+import com.example.core.DEFAULT_ERROR_LOG_MESSAGE
+import com.example.core.DEFAULT_ERROR_MESSAGE
 import com.example.domain.base.Mapper
 import com.example.domain.common.Result
 import com.example.domain.models.DomainMusic
@@ -34,8 +34,8 @@ class MusicRepositoryImpl @Inject constructor(
             context.contentResolver.query(URI, PROJECTION, SELECTION, SELECTION_ARGS, SORT_ORDER)
         cursor?.use {
             if (it.count == 0) Log.e(
-                APPLICATION_ERROR_LOG_KEY,
-                "MusicRepositoryImpl fletchAllLocalMusic: $DEFAULT_ERROR_LOG_MESSAGE"
+                com.example.core.APPLICATION_ERROR_LOG_KEY,
+                "MusicRepositoryImpl fletchAllLocalMusic: ${com.example.core.DEFAULT_ERROR_LOG_MESSAGE}"
             )
             else while (it.moveToNext()) musics.add(
                 DataMusic(
@@ -52,40 +52,40 @@ class MusicRepositoryImpl @Inject constructor(
         Result.Success(data = mapMusicListDataToDomain.map(musics))
     } catch (e: Exception) {
         Log.e(
-            APPLICATION_ERROR_LOG_KEY,
-            "MusicRepositoryImpl fletchAllLocalMusic: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+            com.example.core.APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fletchAllLocalMusic: ${e.message ?: com.example.core.DEFAULT_ERROR_MESSAGE}"
         )
-        Result.Error(DEFAULT_ERROR_MESSAGE)
+        Result.Error(com.example.core.DEFAULT_ERROR_MESSAGE)
     }
 
     override suspend fun fetchAllMusicsObservable(): Result<List<DomainMusic>> = try {
         Result.Success(data = mapMusicListDataToDomain.map(cacheDataSource.fetchAllMusics()))
     } catch (e: Exception) {
         Log.e(
-            APPLICATION_ERROR_LOG_KEY,
-            "MusicRepositoryImpl fetchAllMusicsObservable: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+            com.example.core.APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fetchAllMusicsObservable: ${e.message ?: com.example.core.DEFAULT_ERROR_MESSAGE}"
         )
-        Result.Error(DEFAULT_ERROR_MESSAGE)
+        Result.Error(com.example.core.DEFAULT_ERROR_MESSAGE)
     }
 
     override fun fetchMusicObservable(musicId: String): Result<DomainMusic> = try {
         Result.Success(data = mapMusicDataToDomain.map(cacheDataSource.fetchMusic(musicId = musicId)))
     } catch (e: Exception) {
         Log.e(
-            APPLICATION_ERROR_LOG_KEY,
-            "MusicRepositoryImpl fetchMusicObservable: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+            com.example.core.APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fetchMusicObservable: ${e.message ?: com.example.core.DEFAULT_ERROR_MESSAGE}"
         )
-        Result.Error(DEFAULT_ERROR_MESSAGE)
+        Result.Error(com.example.core.DEFAULT_ERROR_MESSAGE)
     }
 
     override suspend fun fetchMusicFromId(musicId: String): Result<DomainMusic> = try {
         Result.Success(mapMusicDataToDomain.map(cacheDataSource.fetchMusicFromId(musicId = musicId)))
     } catch (e: Exception) {
         Log.e(
-            APPLICATION_ERROR_LOG_KEY,
-            "MusicRepositoryImpl fetchMusicFromId: ${e.message ?: DEFAULT_ERROR_MESSAGE}"
+            com.example.core.APPLICATION_ERROR_LOG_KEY,
+            "MusicRepositoryImpl fetchMusicFromId: ${e.message ?: com.example.core.DEFAULT_ERROR_MESSAGE}"
         )
-        Result.Error(DEFAULT_ERROR_MESSAGE)
+        Result.Error(com.example.core.DEFAULT_ERROR_MESSAGE)
     }
 
 
