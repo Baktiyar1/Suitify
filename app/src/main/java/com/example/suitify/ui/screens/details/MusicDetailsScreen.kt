@@ -1,9 +1,7 @@
 package com.example.suitify.ui.screens.details
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -22,14 +19,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
+import com.example.core_ui.R
+import com.example.core_ui.extention.clickableNoRipple
 import com.example.core_ui.theme.AppPrimaryColor
 import com.example.core_ui.theme.AppSecondaryColor
 import com.example.core_ui.theme.AuthorTextColor
@@ -42,38 +38,74 @@ import com.example.core_ui.theme.ProgressTrackColor
 import com.example.core_ui.theme.TextStyleTheme
 import com.example.core_ui.theme.dp10
 import com.example.core_ui.theme.dp16
-import com.example.core_ui.theme.dp18
 import com.example.core_ui.theme.dp180
-import com.example.core_ui.theme.dp20
 import com.example.core_ui.theme.dp24
 import com.example.core_ui.theme.dp28
-import com.example.core_ui.theme.dp32
 import com.example.core_ui.theme.dp4
-import com.example.core_ui.theme.dp42
-import com.example.core_ui.theme.dp44
 import com.example.core_ui.theme.dp52
 import com.example.core_ui.theme.dp62
 import com.example.core_ui.theme.dp8
 import com.example.core_ui.theme.sp12
 import com.example.core_ui.theme.sp16
 import com.example.core_ui.theme.sp18
-import com.example.core_ui.R
+import com.example.domain.DEFAULT_INT
 import com.example.suitify.models.Music
+import com.example.suitify.ui.screens.details.models.MusicDetailsScreenModel
+import com.example.suitify.ui.screens.icons.fetchFavoritePainter
+import com.example.suitify.ui.screens.icons.fetchIsPlayingPainter
 
 @Composable
-fun TopDetailsMenu(modifier: Modifier = Modifier, music: Music, playlistName: String) {
+fun MusicDetailsScreen(
+    musicDetailsScreenModel: MusicDetailsScreenModel,
+    onBackClick: () -> Unit,
+    onSeekBack: () -> Unit,
+    onPlayOrPause: () -> Unit,
+    onSeekToBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val music = musicDetailsScreenModel.music
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    0.0f to AppPrimaryColor,
+                    1.0f to AppSecondaryColor,
+                    startY = 0.0f,
+                    endY = 500f
+                )
+            ), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TopDetailsMenu(
+            modifier = modifier,
+            music = music,
+            onBackClick = onBackClick,
+            playlistName = musicDetailsScreenModel.playlistName
+        )
+        MusicPlayerScreen(
+            music = music,
+            onSeekBack = onSeekBack,
+            onPlayOrPause = onPlayOrPause,
+            onSeekToBack = onSeekToBack,
+            modifier = modifier
+        )
+    }
+}
+
+@Composable
+fun TopDetailsMenu(
+    music: Music,
+    playlistName: String,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = dp16, vertical = dp24)
     ) {
 
-        MusicButtons(
-            modifier = modifier,
-            boxSize = dp44,
-            imageSize = dp20,
-            imageIcon = R.drawable.arrow_left,
-        )
+        MusicButtons(imageIcon = R.drawable.arrow_left, onClick = onBackClick, modifier = modifier)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -96,18 +128,19 @@ fun TopDetailsMenu(modifier: Modifier = Modifier, music: Music, playlistName: St
 
         Spacer(modifier = Modifier.weight(1f))
 
-        MusicButtons(
-            modifier = modifier,
-            boxSize = dp44,
-            imageSize = dp20,
-            imageIcon = R.drawable.menu
-        )
+        MusicButtons(imageIcon = R.drawable.menu, modifier = modifier)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
+fun MusicPlayerScreen(
+    music: Music,
+    onSeekBack: () -> Unit,
+    onPlayOrPause: () -> Unit,
+    onSeekToBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.padding(horizontal = dp16),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -116,10 +149,9 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
         Spacer(modifier = modifier.weight(1f))
 
         ImageStyleTheme(
-            modifier = modifier
-                .size(dp180)
-                .shadow(elevation = dp16, shape = RoundedCornerShape(dp32)),
-            painter = painterResource(id = music.defaultIconId)
+            painter = painterResource(id = music.defaultIconId),
+            onClick = {},
+            modifier = modifier.size(dp180),
         )
 
         Spacer(modifier = modifier.weight(1f))
@@ -149,7 +181,7 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             Image(
                 modifier = modifier
                     .size(dp24)
-                    .clickable(onClick = {
+                    .clickableNoRipple(onClick = {
                         music.isFavorite = !music.isFavorite
                         isFavoriteImage.value = music.isFavorite
                     }),
@@ -203,20 +235,21 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             modifier = modifier.padding(horizontal = dp16, vertical = dp24),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            MusicButtons(
-                modifier = modifier,
-                boxSize = dp42,
-                imageSize = dp18,
-                imageIcon = R.drawable.group
-            )
+//            MusicButtons(
+//                boxSize = dp42,
+//                imageSize = dp18,
+//                imageIcon = R.drawable.group,
+//                modifier = modifier,
+//            )
 
             Spacer(modifier = modifier.weight(1f))
 
             MusicButtons(
-                modifier = modifier,
                 boxSize = dp52,
                 imageSize = dp24,
-                imageIcon = R.drawable.previous
+                imageIcon = R.drawable.previous,
+                onClick = onSeekBack,
+                modifier = modifier,
             )
 
             Spacer(modifier = modifier.weight(1f))
@@ -224,73 +257,37 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier, music: Music) {
             val isPlaying = false
 
             MusicButtons(
-                modifier = modifier.clickable { },
                 boxSize = dp62,
                 imageSize = dp28,
-                imageIcon = fetchIsPlayingIdPainter(isFirstImage = isPlaying)
+                imageIcon = DEFAULT_INT,
+                imageIconPainter = fetchIsPlayingPainter(isPlaying = isPlaying),
+                onClick = onPlayOrPause,
+                modifier = modifier,
             )
 
             Spacer(modifier = modifier.weight(1f))
 
             MusicButtons(
-                modifier = modifier,
                 boxSize = dp52,
                 imageSize = dp24,
-                imageIcon = R.drawable.next
+                imageIcon = R.drawable.next,
+                onClick = onSeekToBack,
+                modifier = modifier,
             )
 
             Spacer(modifier = modifier.weight(1f))
 
-            MusicButtons(
-                modifier = modifier,
-                boxSize = dp42,
-                imageSize = dp18,
-                imageIcon = R.drawable.repeate_music
-            )
+//            MusicButtons(
+//                boxSize = dp42,
+//                imageSize = dp18,
+//                imageIcon = R.drawable.repeate_music,
+//                modifier = modifier,
+//            )
         }
     }
 }
 
 @Composable
-private fun fetchFavoritePainter(isFirstImage: Boolean): Painter =
-    if (isFirstImage) painterResource(R.drawable.favorite)
-    else painterResource(R.drawable.not_favorite)
-
-@Composable
-private fun fetchIsPlayingIdPainter(isFirstImage: Boolean): Int = if (isFirstImage) R.drawable.play
-else R.drawable.pause
-
-@Composable
-fun fletchFromPlayingText(isFromPlaylist: Boolean): String = stringResource(
+private fun fletchFromPlayingText(isFromPlaylist: Boolean): String = stringResource(
     id = if (isFromPlaylist) R.string.tx_playlist else R.string.tx_main_list
 )
-
-@Preview(showBackground = true)
-@Composable
-fun MusicDetailsScreen(modifier: Modifier = Modifier) {
-    val music = Music(
-        musicId = 3342,
-        title = "Прятки",
-        displayName = "QWER",
-        data = "POIUY",
-        artist = "Хамали $ Наваи",
-        uri = Uri.EMPTY,
-        duration = 423
-    )
-    val playlistName = "Fav"
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    0.0f to AppPrimaryColor,
-                    1.0f to AppSecondaryColor,
-                    startY = 0.0f,
-                    endY = 500f
-                )
-            ), horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TopDetailsMenu(modifier = modifier, music = music, playlistName = playlistName)
-        MusicPlayerScreen(modifier = modifier, music = music)
-    }
-}

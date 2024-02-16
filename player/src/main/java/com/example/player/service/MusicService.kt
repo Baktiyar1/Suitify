@@ -11,10 +11,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MusicService @Inject constructor(
-    private val mediaSession: MediaSession,
-    private val notificationManager: MusicNotificationManager,
-) : MediaSessionService() {
+class MusicService : MediaSessionService() {
+
+    @Inject
+    lateinit var mediaSession: MediaSession
+
+    @Inject
+    lateinit var notificationManager: MusicNotificationManager
 
     @UnstableApi
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

@@ -4,6 +4,6 @@ import com.example.suitify.models.Music
 
 data class ScreenMusicItemModel(
     val music: Music,
+    val nawPlayingMusicId: Long,
     val isPlaying: Boolean,
-    val isNowPlayingMusic: Boolean
 )

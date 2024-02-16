@@ -1,5 +1,6 @@
 package com.example.core_ui.theme
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import com.example.core_ui.R
 import com.example.core_ui.extention.advancedShadow
+import com.example.core_ui.extention.clickableCircleRipple
+import com.example.core_ui.extention.clickableNoRipple
 
 @Composable
 fun TextStyleTheme(modifier: Modifier, text: String, size: TextUnit, color: Color) {
@@ -36,27 +40,38 @@ fun TextStyleTheme(modifier: Modifier, text: String, size: TextUnit, color: Colo
 }
 
 @Composable
-fun ImageStyleTheme(modifier: Modifier, painter: Painter) {
+fun ImageStyleTheme(painter: Painter, onClick: () -> Unit, modifier: Modifier) {
     Image(
-        modifier = modifier,
         painter = painter,
         contentDescription = null,
         contentScale = ContentScale.Crop,
+        modifier = modifier
+            .clip(shape = RoundedCornerShape(dp32))
+            .clickableNoRipple { onClick() },
     )
 }
 
 @Composable
-fun MusicButtons(modifier: Modifier, boxSize: Dp, imageSize: Dp, imageIcon: Int) {
+fun MusicButtons(
+    boxSize: Dp = dp44,
+    imageSize: Dp = dp20,
+    imageIconPainter: Painter? = null,
+    @DrawableRes imageIcon: Int,
+    onClick: () -> Unit = { },
+    modifier: Modifier,
+) {
     Box(
         modifier = modifier
             .size(boxSize)
             .advancedShadow(color = ButtonShadowColor, shadowBlurRadius = dp32)
             .shadow(elevation = dp16, shape = RoundedCornerShape(dp32))
-            .background(ButtonColor),
+            .background(ButtonColor)
+            .clickableCircleRipple { onClick() },
         contentAlignment = Alignment.Center,
     ) {
         Image(
-            painter = painterResource(id = imageIcon),
+            painter = imageIconPainter
+                ?: painterResource(id = imageIcon),
             contentDescription = null,
             modifier = Modifier.size(imageSize),
             alignment = Alignment.Center,
