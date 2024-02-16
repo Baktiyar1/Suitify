@@ -19,11 +19,11 @@ class MusicNotificationManager @Inject constructor(
     private val player: ExoPlayer
 ) {
 
+    private val notificationManager = NotificationManagerCompat.from(context)
+
     init {
         createNotificationChannel()
     }
-
-    private val notificationManager by lazy { NotificationManagerCompat.from(context) }
 
     @UnstableApi
     fun startMusicNotificationService(

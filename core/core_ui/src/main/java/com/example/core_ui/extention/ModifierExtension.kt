@@ -3,9 +3,11 @@ package com.example.core_ui.extention
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
@@ -18,6 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.core_ui.theme.dp32
 
 //fun Modifier.clickableWithoutReply(
 //    interactionSource: MutableInteractionSource, onClick: () -> Unit
@@ -74,4 +77,10 @@ fun Modifier.clickableNoRipple(onClick: () -> Unit): Modifier = composed {
         interactionSource = remember { MutableInteractionSource() }) {
         onClick()
     }
+}
+
+@SuppressLint("UnnecessaryComposedModifier")
+fun Modifier.clickableCircleRipple(onClick: () -> Unit): Modifier = composed {
+    clip(shape = RoundedCornerShape(dp32))
+    clickable { onClick() }
 }

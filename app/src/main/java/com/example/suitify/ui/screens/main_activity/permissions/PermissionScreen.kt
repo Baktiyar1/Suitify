@@ -1,4 +1,4 @@
-package com.example.suitify.ui.screens.permissions
+package com.example.suitify.ui.screens.main_activity.permissions
 
 import android.Manifest
 import android.app.Activity
