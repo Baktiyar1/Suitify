@@ -40,7 +40,7 @@ class ContentResolverHelper @Inject constructor(@ApplicationContext val context:
                     data = getCursorString(it, DATA),
                     duration = getCursorInt(it),
                     title = getCursorString(it, TITLE),
-                    uri = ContentUris.withAppendedId(EXTERNAL_CONTENT_URI, getCursorLong(it)),
+                    uri = ContentUris.withAppendedId(EXTERNAL_CONTENT_URI, getCursorLong(it)).toString(),
                 )
             )
         }

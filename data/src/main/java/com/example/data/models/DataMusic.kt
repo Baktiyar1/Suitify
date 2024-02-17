@@ -1,6 +1,6 @@
 package com.example.data.models
 
-import android.net.Uri
+import com.example.core.EMPTY_STRING
 import com.example.data.R
 
 data class DataMusic(
@@ -10,7 +10,7 @@ data class DataMusic(
     val data: String,
     val executor: String,
     val duration: Int,
-    val uri: Uri,
+    val uri: String,
     val defaultIconId: Int = R.drawable.music_default,
     val isFavorite: Boolean = false,
     val isFromPlaying: Boolean = false,
@@ -24,7 +24,7 @@ data class DataMusic(
             data = String(),
             executor = String(),
             duration = 0,
-            uri = Uri.EMPTY,
+            uri = EMPTY_STRING,
             defaultIconId = 0,
             isFavorite = false,
             isFromPlaying = false,

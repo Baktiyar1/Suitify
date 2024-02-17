@@ -1,5 +1,6 @@
 package com.example.suitify.ui.screens.details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -51,6 +52,7 @@ import com.example.core_ui.theme.sp18
 import com.example.domain.DEFAULT_INT
 import com.example.suitify.models.Music
 import com.example.suitify.ui.screens.details.models.MusicDetailsScreenModel
+import com.example.suitify.ui.screens.details.models.MusicPlayerScreenModel
 import com.example.suitify.ui.screens.icons.fetchFavoritePainter
 import com.example.suitify.ui.screens.icons.fetchIsPlayingPainter
 
@@ -64,6 +66,7 @@ fun MusicDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     val music = musicDetailsScreenModel.music
+    BackHandler(onBack = onBackClick)
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -77,13 +80,16 @@ fun MusicDetailsScreen(
             ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TopDetailsMenu(
-            modifier = modifier,
             music = music,
             onBackClick = onBackClick,
-            playlistName = musicDetailsScreenModel.playlistName
+            playlistName = musicDetailsScreenModel.playlistName,
+            modifier = modifier,
         )
         MusicPlayerScreen(
-            music = music,
+            musicPlayerScreenModel = MusicPlayerScreenModel(
+                music = music,
+                isPlaying = musicDetailsScreenModel.isPlaying
+            ),
             onSeekBack = onSeekBack,
             onPlayOrPause = onPlayOrPause,
             onSeekToBack = onSeekToBack,
@@ -135,12 +141,13 @@ fun TopDetailsMenu(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MusicPlayerScreen(
-    music: Music,
+    musicPlayerScreenModel: MusicPlayerScreenModel,
     onSeekBack: () -> Unit,
     onPlayOrPause: () -> Unit,
     onSeekToBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val music = musicPlayerScreenModel.music
     Column(
         modifier = modifier.padding(horizontal = dp16),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -176,16 +183,13 @@ fun MusicPlayerScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            val isFavoriteImage = remember { mutableStateOf(music.isFavorite) }
-
             Image(
                 modifier = modifier
                     .size(dp24)
                     .clickableNoRipple(onClick = {
                         music.isFavorite = !music.isFavorite
-                        isFavoriteImage.value = music.isFavorite
                     }),
-                painter = fetchFavoritePainter(isFavoriteImage.value),
+                painter = fetchFavoritePainter(music.isFavorite),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
             )
@@ -254,13 +258,11 @@ fun MusicPlayerScreen(
 
             Spacer(modifier = modifier.weight(1f))
 
-            val isPlaying = false
-
             MusicButtons(
                 boxSize = dp62,
                 imageSize = dp28,
                 imageIcon = DEFAULT_INT,
-                imageIconPainter = fetchIsPlayingPainter(isPlaying = isPlaying),
+                imageIconPainter = fetchIsPlayingPainter(isPlaying = musicPlayerScreenModel.isPlaying),
                 onClick = onPlayOrPause,
                 modifier = modifier,
             )

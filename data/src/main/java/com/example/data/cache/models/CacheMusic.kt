@@ -17,7 +17,7 @@ data class CacheMusic(
     @ColumnInfo(name = "display_name") val displayName: String,
     @ColumnInfo(name = "data") val data: String,
     @ColumnInfo(name = "duration") val duration: Int,
-    @ColumnInfo(name = "uri") val uri: Uri,
+    @ColumnInfo(name = "uri") val uri: String,
     @ColumnInfo(name = "default_icon_id") val defaultIconId: Int = R.drawable.music_default,
     @ColumnInfo(name = "is_favorite") val isFavorite: Boolean = false,
     @ColumnInfo(name = "is_from_playing") val isFromPlaying: Boolean = false,

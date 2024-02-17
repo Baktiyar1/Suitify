@@ -19,7 +19,8 @@ object MusicDetailsDestination : Destination {
                 MusicDetailsScreen(
                     musicDetailsScreenModel = MusicDetailsScreenModel(
                         music = playingMusic.collectAsState().value,
-                        playlistName = "Home screen"
+                        playlistName = "Home screen",
+                        isPlaying = isPlaying.collectAsState().value
                     ),
                     onBackClick = { onUiEvents(UiEvents.NavigateToHome) },
                     onSeekBack = { onUiEvents(UiEvents.SeekBack) },

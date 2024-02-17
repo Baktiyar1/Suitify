@@ -1,8 +1,11 @@
 package com.example.suitify.models
 
-import android.net.Uri
+import androidx.compose.runtime.Stable
+import com.example.core.EMPTY_STRING
 import com.example.core_ui.R
+import javax.annotation.concurrent.Immutable
 
+@Stable
 data class Music(
     val musicId: Long,
     val title: String,
@@ -10,7 +13,7 @@ data class Music(
     val data: String,
     val artist: String,
     val duration: Int,
-    val uri: Uri,
+    val uri: String,
     val defaultIconId: Int = R.drawable.music_default,
     val savedStatus: SavedStatus = SavedStatus.NOT_SAVED,
     var isFavorite: Boolean = false,
@@ -32,7 +35,7 @@ data class Music(
             data = String(),
             artist = String(),
             duration = Int.MIN_VALUE,
-            uri = Uri.EMPTY,
+            uri = EMPTY_STRING,
             savedStatus = SavedStatus.NOT_SAVED
         )
     }

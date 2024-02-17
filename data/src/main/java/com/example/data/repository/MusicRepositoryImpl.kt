@@ -45,7 +45,7 @@ class MusicRepositoryImpl @Inject constructor(
                     executor = getCursorString(it, ARTIST),
                     duration = getCursorInt(it),
                     data = getCursorString(it, DATA),
-                    uri = ContentUris.withAppendedId(URI, getCursorLong(it))
+                    uri = ContentUris.withAppendedId(URI, getCursorLong(it)).toString()
                 )
             )
         }

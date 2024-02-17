@@ -18,7 +18,7 @@ class MapMusicFromDomainToUi @Inject constructor(
             displayName = displayName,
             data = data,
             artist = executor,
-            uri = Uri.parse(uri),
+            uri = uri,
             duration = duration,
             defaultIconId = defaultIconId,
             isFavorite = isFavorite,

@@ -1,5 +1,8 @@
 package com.example.suitify.ui.screens.home.models
 
+import javax.annotation.concurrent.Immutable
+
+@Immutable
 sealed class UiEvents {
     data object OnBackPressed : UiEvents()
     data object PlayPause : UiEvents()

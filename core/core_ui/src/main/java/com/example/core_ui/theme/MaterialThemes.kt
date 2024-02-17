@@ -27,7 +27,7 @@ import com.example.core_ui.extention.clickableCircleRipple
 import com.example.core_ui.extention.clickableNoRipple
 
 @Composable
-fun TextStyleTheme(modifier: Modifier, text: String, size: TextUnit, color: Color) {
+fun TextStyleTheme(text: String, size: TextUnit, color: Color, modifier: Modifier) {
     Text(
         modifier = modifier,
         text = text,

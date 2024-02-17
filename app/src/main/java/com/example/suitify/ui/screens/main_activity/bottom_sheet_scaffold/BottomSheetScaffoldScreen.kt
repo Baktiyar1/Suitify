@@ -2,6 +2,7 @@ package com.example.suitify.ui.screens.main_activity.bottom_sheet_scaffold
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,7 +27,6 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +51,7 @@ import com.example.core_ui.theme.dp12
 import com.example.core_ui.theme.dp14
 import com.example.core_ui.theme.dp16
 import com.example.core_ui.theme.dp172
+import com.example.core_ui.theme.dp180
 import com.example.core_ui.theme.dp20
 import com.example.core_ui.theme.dp26
 import com.example.core_ui.theme.dp4
@@ -180,14 +186,9 @@ fun BottomMenu(
                         .size(dp20),
                 )
 
-                val isFavoriteImage = remember { mutableStateOf(music.isFavorite) }
-
                 ImageStyleTheme(
-                    painter = fetchFavoritePainter(isFavorite = isFavoriteImage.value),
-                    onClick = {
-                        music.isFavorite = !music.isFavorite
-                        isFavoriteImage.value = music.isFavorite
-                    },
+                    painter = fetchFavoritePainter(isFavorite = music.isFavorite),
+                    onClick = { music.isFavorite = !music.isFavorite },
                     modifier = modifier
                         .padding(end = dp16)
                         .size(dp20)
@@ -240,19 +241,23 @@ private fun MusicPlayInfo(music: Music, modifier: Modifier = Modifier) {
         modifier = modifier.size(dp42),
     )
 
-    Column(modifier = modifier.padding(start = dp8)) {
+    Column(
+        modifier = modifier
+            .padding(start = dp8)
+            .width(dp180)
+    ) {
         TextStyleTheme(
-            modifier = modifier,
             text = music.title,
             size = sp12,
-            color = MainTextColor
+            color = MainTextColor,
+            modifier = modifier.horizontalScroll(state = rememberScrollState()),
         )
 
         TextStyleTheme(
-            modifier = modifier.padding(top = dp4),
             text = music.artist,
             size = sp12,
-            color = AuthorTextColor
+            color = AuthorTextColor,
+            modifier = modifier.padding(top = dp4),
         )
     }
 }

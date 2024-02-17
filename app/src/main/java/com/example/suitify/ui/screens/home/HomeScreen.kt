@@ -40,6 +40,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import com.example.core_ui.R
 import com.example.core_ui.extention.advancedShadow
+import com.example.core_ui.extention.clickableCircleRipple
 import com.example.core_ui.extention.clickableNoRipple
 import com.example.core_ui.extention.fadingEdge
 import com.example.core_ui.theme.AppPrimaryColor
@@ -60,6 +61,7 @@ import com.example.core_ui.theme.dp10
 import com.example.core_ui.theme.dp12
 import com.example.core_ui.theme.dp14
 import com.example.core_ui.theme.dp16
+import com.example.core_ui.theme.dp172
 import com.example.core_ui.theme.dp2
 import com.example.core_ui.theme.dp20
 import com.example.core_ui.theme.dp24
@@ -95,12 +97,15 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.background(
-            brush = Brush.verticalGradient(
-                colorStops = arrayOf(0.0f to AppPrimaryColor, 1.0f to AppSecondaryColor),
-                startY = 0.0f, endY = 500f
+        modifier = modifier
+            .background(
+                brush = Brush.verticalGradient(
+                    colorStops = arrayOf(0.0f to AppPrimaryColor, 1.0f to AppSecondaryColor),
+                    startY = 0.0f, endY = 500f
+                )
             )
-        ), horizontalAlignment = Alignment.CenterHorizontally
+            .padding(bottom = dp172),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
             modifier = modifier
@@ -345,7 +350,6 @@ fun MusicItem(
                 Row(modifier = modifier) {
                     Spacer(modifier = modifier.weight(5f))
 
-                    val isFavoriteImage = remember { mutableStateOf(music.isFavorite) }
 
                     Image(
                         modifier = modifier
@@ -353,9 +357,8 @@ fun MusicItem(
                             .shadow(elevation = dp8, shape = RoundedCornerShape(dp16))
                             .clickableNoRipple(onClick = {
                                 music.isFavorite = !music.isFavorite
-                                isFavoriteImage.value = music.isFavorite
                             }),
-                        painter = fetchFavoritePainter(isFavoriteImage.value),
+                        painter = fetchFavoritePainter(music.isFavorite),
                         contentDescription = null,
                     )
 
@@ -389,7 +392,8 @@ fun BottomSheetItem(bottomSheetModel: BottomSheetModel, modifier: Modifier = Mod
     Row(
         modifier = modifier
             .padding(bottom = dp16)
-            .clickable { },
+            .shadow(elevation = dp16, shape = RoundedCornerShape(dp26))
+            .clickableCircleRipple {  },
         verticalAlignment = Alignment.CenterVertically
     ) {
         MusicButtons(imageIcon = bottomSheetModel.iconId, modifier = modifier)
@@ -404,10 +408,10 @@ fun BottomSheetItem(bottomSheetModel: BottomSheetModel, modifier: Modifier = Mod
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextStyleTheme(
-                modifier = modifier.padding(start = dp14),
                 text = bottomSheetModel.title,
                 size = sp14,
-                color = MainTextColor
+                color = MainTextColor,
+                modifier = modifier.padding(start = dp14),
             )
         }
     }
