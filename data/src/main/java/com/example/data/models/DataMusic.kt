@@ -1,6 +1,5 @@
 package com.example.data.models
 
-import com.example.core.EMPTY_STRING
 import com.example.data.R
 
 data class DataMusic(
@@ -16,19 +15,19 @@ data class DataMusic(
     val isFromPlaying: Boolean = false,
     val savedStatus: DataSavedStatus = DataSavedStatus.NOT_SAVED
 ) {
-    companion object {
-        val unknown = DataMusic(
-            musicId = 0L,
-            title = String(),
-            displayName = String(),
-            data = String(),
-            executor = String(),
-            duration = 0,
-            uri = EMPTY_STRING,
-            defaultIconId = 0,
-            isFavorite = false,
-            isFromPlaying = false,
-            savedStatus = DataSavedStatus.NOT_SAVED,
-        )
-    }
+//    companion object {
+//        val unknown = DataMusic(
+//            musicId = 0L,
+//            title = String(),
+//            displayName = String(),
+//            data = String(),
+//            executor = String(),
+//            duration = 0,
+//            uri = EMPTY_STRING,
+//            defaultIconId = 0,
+//            isFavorite = false,
+//            isFromPlaying = false,
+//            savedStatus = DataSavedStatus.NOT_SAVED,
+//        )
+//    }
 }

@@ -3,7 +3,6 @@ package com.example.suitify.models
 import androidx.compose.runtime.Stable
 import com.example.core.EMPTY_STRING
 import com.example.core_ui.R
-import javax.annotation.concurrent.Immutable
 
 @Stable
 data class Music(

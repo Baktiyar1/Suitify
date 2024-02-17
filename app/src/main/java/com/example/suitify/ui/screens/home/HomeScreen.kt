@@ -25,8 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -393,7 +391,7 @@ fun BottomSheetItem(bottomSheetModel: BottomSheetModel, modifier: Modifier = Mod
         modifier = modifier
             .padding(bottom = dp16)
             .shadow(elevation = dp16, shape = RoundedCornerShape(dp26))
-            .clickableCircleRipple {  },
+            .clickableCircleRipple { },
         verticalAlignment = Alignment.CenterVertically
     ) {
         MusicButtons(imageIcon = bottomSheetModel.iconId, modifier = modifier)

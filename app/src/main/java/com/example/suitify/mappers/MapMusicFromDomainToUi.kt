@@ -1,6 +1,5 @@
 package com.example.suitify.mappers
 
-import android.net.Uri
 import com.example.domain.base.Mapper
 import com.example.domain.models.DomainMusic
 import com.example.domain.models.DomainSavedStatus
