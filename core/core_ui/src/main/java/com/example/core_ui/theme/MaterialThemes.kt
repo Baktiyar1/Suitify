@@ -85,7 +85,7 @@ fun MusicProgressText(text: String) {
     Text(
         text = text,
         fontSize = sp14,
-        style = TextStyle(fontStyle = FontStyle(R.font.urbanist_black)),
+        style = TextStyle(fontStyle = FontStyle.Italic),
         maxLines = 1,
         color = MainTextColor
     )

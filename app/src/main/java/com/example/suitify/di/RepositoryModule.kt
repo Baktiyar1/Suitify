@@ -1,6 +1,5 @@
 package com.example.suitify.di
 
-import android.content.Context
 import com.example.data.cache.source.music.MusicCacheDataSource
 import com.example.data.models.DataMusic
 import com.example.data.models.DataSavedStatus
@@ -14,7 +13,6 @@ import com.example.domain.repositories.PlaylistRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -25,19 +23,17 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideMusicRepository(
-        @ApplicationContext context: Context,
         cacheDataSource: MusicCacheDataSource,
         mapMusicDataToDomain: Mapper<DataMusic, DomainMusic>,
         mapMusicListDataToDomain: Mapper<List<DataMusic>, List<DomainMusic>>,
         mapMusicDomainToData: Mapper<DomainMusic, DataMusic>,
-        mapSavedStatusDomainToData: Mapper<DomainSavedStatus, DataSavedStatus>
+        mapSavedStatusDomainToData: Mapper<DomainSavedStatus, DataSavedStatus>,
     ): MusicRepository = MusicRepositoryImpl(
-        context = context,
         cacheDataSource = cacheDataSource,
         mapMusicDataToDomain = mapMusicDataToDomain,
         mapMusicListDataToDomain = mapMusicListDataToDomain,
         mapMusicDomainToData = mapMusicDomainToData,
-        mapSavedStatusDomainToData = mapSavedStatusDomainToData
+        mapSavedStatusDomainToData = mapSavedStatusDomainToData,
     )
 
     @Provides

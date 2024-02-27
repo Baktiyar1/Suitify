@@ -5,18 +5,14 @@ import com.example.domain.use_cases.AddNewMusicUseCase
 import com.example.domain.use_cases.AddNewMusicUseCaseImpl
 import com.example.domain.use_cases.ClearTableUseCase
 import com.example.domain.use_cases.ClearTableUseCaseImpl
-import com.example.domain.use_cases.DeleteMusicUseCase
-import com.example.domain.use_cases.DeleteMusicUseCaseImpl
 import com.example.domain.use_cases.FetchAllMusicsObservableUseCase
 import com.example.domain.use_cases.FetchAllMusicsObservableUseCaseImpl
 import com.example.domain.use_cases.FetchMusicFromIdUseCase
 import com.example.domain.use_cases.FetchMusicFromIdUseCaseImpl
 import com.example.domain.use_cases.FetchMusicObservableUseCase
 import com.example.domain.use_cases.FetchMusicObservableUseCaseImpl
-import com.example.domain.use_cases.FetchAllLocalMusicUseCase
-import com.example.domain.use_cases.FetchAllLocalMusicUseCaseImpl
-import com.example.domain.use_cases.SaveMusicsUseCase
-import com.example.domain.use_cases.SaveMusicsUseCaseImpl
+import com.example.domain.use_cases.ChangeFavoriteMusicUseCase
+import com.example.domain.use_cases.ChangeFavoriteMusicUseCaseImpl
 import com.example.domain.use_cases.UpdateExecutorUseCase
 import com.example.domain.use_cases.UpdateExecutorUseCaseImpl
 import com.example.domain.use_cases.UpdateMusicSavedStatusUseCase
@@ -47,11 +43,6 @@ object IteratorModule {
 
     @Provides
     @Singleton
-    fun provideDeleteMusicUseCase(repository: MusicRepository): DeleteMusicUseCase =
-        DeleteMusicUseCaseImpl(repository = repository)
-
-    @Provides
-    @Singleton
     fun provideFetchAllMusicsObservableUseCase(repository: MusicRepository): FetchAllMusicsObservableUseCase =
         FetchAllMusicsObservableUseCaseImpl(repository = repository)
 
@@ -67,13 +58,8 @@ object IteratorModule {
 
     @Provides
     @Singleton
-    fun provideFletchAllLocalMusicUseCase(repository: MusicRepository): FetchAllLocalMusicUseCase =
-        FetchAllLocalMusicUseCaseImpl(repository = repository)
-
-    @Provides
-    @Singleton
-    fun provideSaveMusicsUseCase(repository: MusicRepository): SaveMusicsUseCase =
-        SaveMusicsUseCaseImpl(repository = repository)
+    fun provideSaveMusicsUseCase(repository: MusicRepository): ChangeFavoriteMusicUseCase =
+        ChangeFavoriteMusicUseCaseImpl(repository = repository)
 
     @Provides
     @Singleton

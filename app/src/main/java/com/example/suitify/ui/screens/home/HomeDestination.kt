@@ -26,10 +26,12 @@ object HomeDestination : Destination {
                         isVisibleCategory = isVisibleCategory.collectAsState().value,
                         searchText = searchText.collectAsState().value
                     ),
+                    onFavoriteClick = { onUiEvents(UiEvents.FavoriteChange(it)) },
                     onSearchTextChange = { onUiEvents(UiEvents.SearchTextChange(it)) },
-                    onCategoryVisibilityChange = { onUiEvents(UiEvents.CategoryVisibilityChange) },
+//                    onCategoryVisibilityChange = { onUiEvents(UiEvents.CategoryVisibilityChange) },
                     onSearchVisibilityChange = { onUiEvents(UiEvents.SearchVisibilityChange(it)) },
                     onItemClick = { onUiEvents(UiEvents.SelectedMusicChange(it)) },
+                    onPlayOrPause = { onUiEvents(UiEvents.PlayPause) },
                 )
             }
         }

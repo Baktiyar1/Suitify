@@ -34,13 +34,18 @@ class MusicNotificationAdapter(
             .asBitmap()
             .load(player.mediaMetadata.artworkUri)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    callback.onBitmap(resource)
-                }
+            .into(
+                object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        callback.onBitmap(resource)
+                    }
 
-                override fun onLoadCleared(placeholder: Drawable?) = Unit
-            })
+                    override fun onLoadCleared(placeholder: Drawable?) = Unit
+                },
+            )
         return null
     }
 }

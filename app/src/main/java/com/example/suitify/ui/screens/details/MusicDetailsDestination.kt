@@ -19,6 +19,9 @@ object MusicDetailsDestination : Destination {
                 MusicDetailsScreen(
                     musicDetailsScreenModel = MusicDetailsScreenModel(
                         music = playingMusic.collectAsState().value,
+                        progress = progress,
+                        progressText = progressText.collectAsState().value,
+                        maxDurationText = maxDurationText.collectAsState().value,
                         playlistName = "Home screen",
                         isPlaying = isPlaying.collectAsState().value
                     ),
@@ -26,6 +29,8 @@ object MusicDetailsDestination : Destination {
                     onSeekBack = { onUiEvents(UiEvents.SeekBack) },
                     onPlayOrPause = { onUiEvents(UiEvents.PlayPause) },
                     onSeekToBack = { onUiEvents(UiEvents.SeekToNext) },
+                    onFavoriteChange = { onUiEvents(UiEvents.FavoriteChange(it)) },
+                    onProgressChange = { onUiEvents(UiEvents.UpdateProgress(it)) },
                 )
             }
         }

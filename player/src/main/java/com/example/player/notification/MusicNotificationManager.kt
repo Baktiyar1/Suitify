@@ -45,8 +45,10 @@ class MusicNotificationManager @Inject constructor(
     }
 
     private fun startForeGroundMusicNotificationService(mediaSessionService: MediaSessionService) {
-        val notification = Notification.Builder(context, NOTIFICATION_CHANNEL_ID)
-            .setCategory(Notification.CATEGORY_SERVICE).build()
+        val notification = Notification
+            .Builder(context, NOTIFICATION_CHANNEL_ID)
+            .setCategory(Notification.CATEGORY_SERVICE)
+            .build()
         mediaSessionService.startForeground(NOTIFICATION_ID, notification)
     }
 

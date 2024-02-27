@@ -5,19 +5,19 @@ import com.example.data.models.DataSavedStatus
 
 interface MusicCacheDataSource {
 
+    var favoriteMusic: MutableList<Long>
+
     suspend fun fetchAllMusics(): List<DataMusic>
 
     fun fetchMusic(musicId: String): DataMusic
 
     suspend fun fetchMusicFromId(musicId: String): DataMusic
 
-    suspend fun saveMusics(musics: List<DataMusic>)
+    suspend fun changeFavoriteMusic(musicId: Long)
 
     suspend fun addNewMusic(music: DataMusic)
 
-    suspend fun deleteMusic(id: String)
-
-    suspend fun clearTable()
+    suspend fun clearFavoriteTable()
 
     suspend fun updateTitle(id: String, title: String)
 

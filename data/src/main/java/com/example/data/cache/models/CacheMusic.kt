@@ -8,9 +8,9 @@ import com.example.data.R
 
 const val MUSICS_TABLE_NAME = "musics_table"
 
-@Entity(tableName = MUSICS_TABLE_NAME, indices = [Index("id")])
+@Entity(tableName = MUSICS_TABLE_NAME, indices = [Index("musicId")])
 data class CacheMusic(
-    @PrimaryKey @ColumnInfo(name = "id") val musicId: Long,
+    @PrimaryKey @ColumnInfo(name = "musicId") val musicId: Long,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "executor") val executor: String,
     @ColumnInfo(name = "display_name") val displayName: String,
