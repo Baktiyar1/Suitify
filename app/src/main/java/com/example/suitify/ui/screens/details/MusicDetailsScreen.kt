@@ -15,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,6 +61,8 @@ fun MusicDetailsScreen(
     onSeekBack: () -> Unit,
     onPlayOrPause: () -> Unit,
     onSeekToBack: () -> Unit,
+    onFavoriteChange: (Long) -> Unit,
+    onProgressChange: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val music = musicDetailsScreenModel.music
@@ -87,11 +88,16 @@ fun MusicDetailsScreen(
         MusicPlayerScreen(
             musicPlayerScreenModel = MusicPlayerScreenModel(
                 music = music,
+                progress = musicDetailsScreenModel.progress,
+                progressText = musicDetailsScreenModel.progressText,
+                maxDurationText = musicDetailsScreenModel.maxDurationText,
                 isPlaying = musicDetailsScreenModel.isPlaying
             ),
             onSeekBack = onSeekBack,
             onPlayOrPause = onPlayOrPause,
             onSeekToBack = onSeekToBack,
+            onFavoriteChange = onFavoriteChange,
+            onProgressChange = onProgressChange,
             modifier = modifier
         )
     }
@@ -133,7 +139,7 @@ fun TopDetailsMenu(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        MusicButtons(imageIcon = R.drawable.menu, modifier = modifier)
+//        MusicButtons(imageIcon = R.drawable.menu, modifier = modifier)
     }
 }
 
@@ -144,6 +150,8 @@ fun MusicPlayerScreen(
     onSeekBack: () -> Unit,
     onPlayOrPause: () -> Unit,
     onSeekToBack: () -> Unit,
+    onFavoriteChange: (Long) -> Unit,
+    onProgressChange: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val music = musicPlayerScreenModel.music
@@ -186,7 +194,7 @@ fun MusicPlayerScreen(
                 modifier = modifier
                     .size(dp24)
                     .clickableNoRipple(onClick = {
-                        music.isFavorite = !music.isFavorite
+                        onFavoriteChange(music.musicId)
                     }),
                 painter = fetchFavoritePainter(music.isFavorite),
                 contentDescription = null,
@@ -194,16 +202,15 @@ fun MusicPlayerScreen(
             )
         }
 
-        val sliderPosition = remember { mutableFloatStateOf(value = 5f) }
         val interactionSource = remember { MutableInteractionSource() }
 
         Slider(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = dp10),
-            value = sliderPosition.floatValue,
-            onValueChange = { sliderPosition.floatValue = it },
-            valueRange = 0f..100f,
+            value = musicPlayerScreenModel.progress,
+            onValueChange = { onProgressChange(it) },
+            valueRange = 0f..1f,
             onValueChangeFinished = {
                 // launch some business logic update with the state you hold
                 // viewModel.updateSelectedSliderValue(sliderPosition)
@@ -229,9 +236,9 @@ fun MusicPlayerScreen(
                 .fillMaxWidth()
                 .padding(start = dp16, end = dp16, top = dp16)
         ) {
-            MusicProgressText(text = stringResource(id = R.string.tx_default_time))
+            MusicProgressText(text = musicPlayerScreenModel.progressText)
             Spacer(modifier = modifier.weight(1f))
-            MusicProgressText(text = stringResource(id = R.string.tx_default_time))
+            MusicProgressText(text = musicPlayerScreenModel.maxDurationText)
         }
 
         Row(

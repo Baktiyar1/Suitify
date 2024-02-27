@@ -6,5 +6,8 @@ import com.example.suitify.models.Music
 @Stable
 data class MusicPlayerScreenModel(
     val music: Music,
+    val progress: Float,
+    val progressText: String,
+    val maxDurationText: String,
     val isPlaying: Boolean
 )

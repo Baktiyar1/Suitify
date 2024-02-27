@@ -73,25 +73,26 @@ import com.example.core_ui.theme.sp12
 import com.example.core_ui.theme.sp14
 import com.example.core_ui.theme.sp16
 import com.example.core_ui.theme.sp18
-import com.example.suitify.models.BottomSheetModel
 import com.example.suitify.ui.screens.home.models.HomeUiStateModel
 import com.example.suitify.ui.screens.home.models.ScreenMusicItemListModel
 import com.example.suitify.ui.screens.home.models.ScreenMusicItemModel
 import com.example.suitify.ui.screens.home.models.ScreenPlaylistModel
 import com.example.suitify.ui.screens.home.models.ScreenSearchModel
 import com.example.suitify.ui.screens.home.models.ScreenTopMenuModel
-import com.example.suitify.ui.screens.icons.fetchCategoryPainter
 import com.example.suitify.ui.screens.icons.fetchFavoritePainter
 import com.example.suitify.ui.screens.icons.fetchIsPlayingPainter
+import com.example.suitify.ui.screens.main_activity.bottom_sheet_scaffold.model.BottomSheetModel
 import com.example.suitify.ui.screens.playlist.PlaylistScreen
 
 @Composable
 fun HomeScreen(
     homeUiStateModel: HomeUiStateModel,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
+    onFavoriteClick: (Long) -> Unit,
     onSearchTextChange: (String) -> Unit,
     onSearchVisibilityChange: (Boolean) -> Unit,
-    onCategoryVisibilityChange: () -> Unit,
+    onPlayOrPause: () -> Unit,
+//    onCategoryVisibilityChange: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -116,7 +117,7 @@ fun HomeScreen(
                     isVisibleSearch = homeUiStateModel.isVisibleSearch,
                     isVisibleCategory = homeUiStateModel.isVisibleCategory
                 ),
-                onCategoryVisibilityChange = onCategoryVisibilityChange,
+//                onCategoryVisibilityChange = onCategoryVisibilityChange,
                 onSearchVisibilityChange = onSearchVisibilityChange,
                 modifier = modifier,
             )
@@ -131,8 +132,10 @@ fun HomeScreen(
                     searchText = homeUiStateModel.searchText,
                 ),
                 onItemClick = onItemClick,
+                onFavoriteClick = onFavoriteClick,
                 onSearchTextChange = onSearchTextChange,
                 onSearchVisibilityChange = onSearchVisibilityChange,
+                onPlayOrPause = onPlayOrPause,
                 modifier = modifier
             )
             Spacer(modifier = modifier.weight(1f))
@@ -144,7 +147,7 @@ fun HomeScreen(
 fun TopMenu(
     screenTopMenuModel: ScreenTopMenuModel,
     onSearchVisibilityChange: (Boolean) -> Unit,
-    onCategoryVisibilityChange: () -> Unit,
+//    onCategoryVisibilityChange: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -170,24 +173,27 @@ fun TopMenu(
             MusicButtons(
                 imageIcon = R.drawable.search,
                 onClick = { onSearchVisibilityChange(true) },
-                modifier = modifier.padding(end = dp24),
+                modifier = modifier
+//                    .padding(end = dp24),
             )
         }
 
-        MusicButtons(
-            imageIcon = fetchCategoryPainter(screenTopMenuModel.isVisibleCategory),
-            onClick = { onCategoryVisibilityChange() },
-            modifier = modifier,
-        )
+//        MusicButtons(
+//            imageIcon = fetchCategoryPainter(screenTopMenuModel.isVisibleCategory),
+//            onClick = { onCategoryVisibilityChange() },
+//            modifier = modifier,
+//        )
     }
 }
 
 @Composable
 fun SearchView(
     screenSearchModel: ScreenSearchModel,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
+    onFavoriteClick: (Long) -> Unit,
     onSearchTextChange: (String) -> Unit,
     onSearchVisibilityChange: (Boolean) -> Unit,
+    onPlayOrPause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(visible = screenSearchModel.isVisibleSearch) {
@@ -254,6 +260,8 @@ fun SearchView(
                 nowPlayingMusicId = screenSearchModel.nowPlayingMusicId,
             ),
             onItemClick = onItemClick,
+            onFavoriteClick = onFavoriteClick,
+            onPlayOrPause = onPlayOrPause,
             modifier = modifier
         )
     }
@@ -262,7 +270,9 @@ fun SearchView(
 @Composable
 fun MusicItemList(
     screenMusicItemListModel: ScreenMusicItemListModel,
-    onItemClick: (Int) -> Unit,
+    onItemClick: (Long) -> Unit,
+    onFavoriteClick: (Long) -> Unit,
+    onPlayOrPause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -277,14 +287,16 @@ fun MusicItemList(
                 )
             )
     ) {
-        itemsIndexed(items = screenMusicItemListModel.musics) { index, music ->
+        itemsIndexed(items = screenMusicItemListModel.musics) { _, music ->
             MusicItem(
                 screenMusicItemModel = ScreenMusicItemModel(
                     music = music,
                     nawPlayingMusicId = screenMusicItemListModel.nowPlayingMusicId,
                     isPlaying = screenMusicItemListModel.isPlaying,
                 ),
-                onItemClick = { onItemClick(index) },
+                onItemClick = { onItemClick(music.musicId) },
+                onFavoriteClick = onFavoriteClick,
+                onPlayOrPause = onPlayOrPause,
                 modifier = modifier,
             )
         }
@@ -295,6 +307,8 @@ fun MusicItemList(
 fun MusicItem(
     screenMusicItemModel: ScreenMusicItemModel,
     onItemClick: () -> Unit,
+    onFavoriteClick: (Long) -> Unit,
+    onPlayOrPause: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val music = screenMusicItemModel.music
@@ -334,6 +348,7 @@ fun MusicItem(
                             shape = RoundedCornerShape(dp26),
                             spotColor = PlaylistItemBackground
                         )
+                        .clickableCircleRipple { onPlayOrPause() }
                 )
 
                 Image(
@@ -354,17 +369,17 @@ fun MusicItem(
                             .padding(top = dp2, end = dp16)
                             .shadow(elevation = dp8, shape = RoundedCornerShape(dp16))
                             .clickableNoRipple(onClick = {
-                                music.isFavorite = !music.isFavorite
+                                onFavoriteClick(music.musicId)
                             }),
                         painter = fetchFavoritePainter(music.isFavorite),
                         contentDescription = null,
                     )
 
-                    Image(
-                        painter = painterResource(id = R.drawable.menu),
-                        contentDescription = null,
-                        modifier = modifier.padding(top = dp2)
-                    )
+//                    Image(
+//                        painter = painterResource(id = R.drawable.menu),
+//                        contentDescription = null,
+//                        modifier = modifier.padding(top = dp2)
+//                    )
                 }
 
                 TextStyleTheme(

@@ -1,5 +1,6 @@
 package com.example.suitify.di
 
+import com.example.data.cache.db.FavoriteMusicDao
 import com.example.data.cache.db.MusicDao
 import com.example.data.cache.models.CacheMusic
 import com.example.data.cache.models.CacheSavedStatus
@@ -8,7 +9,6 @@ import com.example.data.cache.source.music.MusicCacheDataSource
 import com.example.data.cache.source.music.MusicCacheDataSourceImpl
 import com.example.data.models.DataMusic
 import com.example.data.models.DataSavedStatus
-import com.example.domain.DispatchersProvider
 import com.example.domain.base.Mapper
 import dagger.Module
 import dagger.Provides
@@ -24,18 +24,20 @@ object DataSourceModule {
     @Singleton
     fun provideMusicCacheDataSource(
         musicDao: MusicDao,
+        favoriteMusicDao: FavoriteMusicDao,
         contentResolverHelper: ContentResolverHelper,
         mapMusicCacheToData: Mapper<CacheMusic, DataMusic>,
         mapMusicListCacheToData: Mapper<List<CacheMusic>, List<DataMusic>>,
         mapMusicDataToCache: Mapper<DataMusic, CacheMusic>,
-        mapSavedStatusDataToCache: Mapper<DataSavedStatus, CacheSavedStatus>
+        mapSavedStatusDataToCache: Mapper<DataSavedStatus, CacheSavedStatus>,
     ): MusicCacheDataSource = MusicCacheDataSourceImpl(
         musicDao = musicDao,
+        favoriteMusicDao = favoriteMusicDao,
         contentResolverHelper = contentResolverHelper,
         mapMusicCacheToData = mapMusicCacheToData,
         mapMusicListCacheToData = mapMusicListCacheToData,
         mapMusicDataToCache = mapMusicDataToCache,
-        mapSavedStatusDataToCache = mapSavedStatusDataToCache
+        mapSavedStatusDataToCache = mapSavedStatusDataToCache,
     )
 
 }

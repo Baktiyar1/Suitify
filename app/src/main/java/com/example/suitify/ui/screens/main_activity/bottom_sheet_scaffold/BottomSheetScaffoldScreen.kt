@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
@@ -55,10 +54,8 @@ import com.example.core_ui.theme.dp4
 import com.example.core_ui.theme.dp42
 import com.example.core_ui.theme.dp8
 import com.example.core_ui.theme.sp12
-import com.example.suitify.models.BottomSheetModel
 import com.example.suitify.models.Music
 import com.example.suitify.ui.navigation.app_navigation.AppNavGraph
-import com.example.suitify.ui.screens.home.BottomSheetItem
 import com.example.suitify.ui.screens.home.HomeViewModel
 import com.example.suitify.ui.screens.home.models.ScreenBottomMenuModel
 import com.example.suitify.ui.screens.home.models.UiEvents
@@ -74,10 +71,13 @@ fun BottomSheetScaffoldScreen(modifier: Modifier = Modifier) {
         val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
             bottomSheetState = SheetState(
                 skipPartiallyExpanded = false,
-                initialValue = if (isBottomSheetVisibility) SheetValue.PartiallyExpanded else SheetValue.Hidden,
+                initialValue = if (isBottomSheetVisibility) SheetValue.PartiallyExpanded
+                else SheetValue.Hidden,
                 confirmValueChange = {
-                    if (isBottomSheetVisibility) it != SheetValue.Hidden else it == SheetValue.Hidden
-                })
+                    if (isBottomSheetVisibility) it != SheetValue.Hidden
+                    else it == SheetValue.Hidden
+                }
+            )
         )
         BottomSheetScaffold(
             modifier = modifier.fillMaxSize(),
@@ -101,34 +101,35 @@ fun BottomSheetScaffoldScreen(modifier: Modifier = Modifier) {
                             progress = progress,
                             isPlaying = isPlaying.collectAsState().value
                         ),
+                        onFavoriteChange = { onUiEvents(UiEvents.FavoriteChange(it)) },
                         onNavigateToDetails = { onUiEvents(UiEvents.NavigateToDetails) },
-                        onProgress = { onUiEvents(UiEvents.UpdateProgress(it)) },
+                        onProgressChange = { onUiEvents(UiEvents.UpdateProgress(it)) },
                         onStart = { onUiEvents(UiEvents.PlayPause) },
                         onNext = { onUiEvents(UiEvents.SeekToNext) }
                     )
 
-                    Spacer(modifier = modifier.padding(top = dp16))
-
-                    BottomSheetItem(
-                        modifier = modifier, bottomSheetModel = BottomSheetModel(
-                            title = stringResource(id = R.string.tx_like),
-                            iconId = R.drawable.not_favorite
-                        )
-                    )
-
-                    BottomSheetItem(
-                        modifier = modifier, bottomSheetModel = BottomSheetModel(
-                            title = stringResource(id = R.string.tx_add_to_playlist),
-                            iconId = R.drawable.playlist
-                        )
-                    )
-
-                    BottomSheetItem(
-                        modifier = modifier, bottomSheetModel = BottomSheetModel(
-                            title = stringResource(id = R.string.tx_share),
-                            iconId = R.drawable.share
-                        )
-                    )
+//                    Spacer(modifier = modifier.padding(top = dp16))
+//
+//                    BottomSheetItem(
+//                        modifier = modifier, bottomSheetModel = BottomSheetModel(
+//                            title = stringResource(id = R.string.tx_like),
+//                            iconId = R.drawable.not_favorite
+//                        )
+//                    )
+//
+//                    BottomSheetItem(
+//                        modifier = modifier, bottomSheetModel = BottomSheetModel(
+//                            title = stringResource(id = R.string.tx_add_to_playlist),
+//                            iconId = R.drawable.playlist
+//                        )
+//                    )
+//
+//                    BottomSheetItem(
+//                        modifier = modifier, bottomSheetModel = BottomSheetModel(
+//                            title = stringResource(id = R.string.tx_share),
+//                            iconId = R.drawable.share
+//                        )
+//                    )
                 }
             },
         ) {
@@ -149,7 +150,8 @@ fun BottomSheetScaffoldScreen(modifier: Modifier = Modifier) {
 fun BottomMenu(
     screenBottomMenuModel: ScreenBottomMenuModel,
     onNavigateToDetails: () -> Unit,
-    onProgress: (Float) -> Unit,
+    onFavoriteChange: (Long) -> Unit,
+    onProgressChange: (Float) -> Unit,
     onStart: () -> Unit,
     onNext: () -> Unit,
     modifier: Modifier = Modifier
@@ -185,7 +187,7 @@ fun BottomMenu(
 
                 ImageStyleTheme(
                     painter = fetchFavoritePainter(isFavorite = music.isFavorite),
-                    onClick = { music.isFavorite = !music.isFavorite },
+                    onClick = { onFavoriteChange(music.musicId) },
                     modifier = modifier
                         .padding(end = dp16)
                         .size(dp20)
@@ -205,8 +207,8 @@ fun BottomMenu(
                     .fillMaxWidth()
                     .padding(top = dp12),
                 value = screenBottomMenuModel.progress,
-                onValueChange = { onProgress(it) },
-                valueRange = 0f..100f,
+                onValueChange = { onProgressChange(it) },
+                valueRange = 0f..1f,
                 onValueChangeFinished = {
                     // launch some business logic update with the state you hold
                     // viewModel.updateSelectedSliderValue(sliderPosition)

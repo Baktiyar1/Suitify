@@ -48,7 +48,7 @@ class ContentResolverHelper @Inject constructor(@ApplicationContext val context:
     }
 
     private fun getCursorString(cursor: Cursor, value: String) =
-        cursor.getString(cursor.getColumnIndexOrThrow(value))
+        cursor.getString(cursor.getColumnIndexOrThrow(value)).trim()
 
     private fun getCursorLong(cursor: Cursor) = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
 
@@ -63,7 +63,7 @@ class ContentResolverHelper @Inject constructor(@ApplicationContext val context:
         private const val TITLE = MediaStore.Audio.AudioColumns.TITLE
         private const val IS_MUSIC = MediaStore.Audio.AudioColumns.IS_MUSIC
         private val EXTERNAL_CONTENT_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        private const val SELECTION_CLAUSE: String = "$IS_MUSIC = ?"
+        private const val SELECTION_CLAUSE = "$IS_MUSIC = ?"
         private val SELECTION_ARGS = arrayOf("1")
         private const val SORT_ORDER = "$DISPLAY_NAME ASC"
         private val PROJECTION by lazy { arrayOf(DISPLAY_NAME, ID, ARTIST, DATA, DURATION, TITLE) }

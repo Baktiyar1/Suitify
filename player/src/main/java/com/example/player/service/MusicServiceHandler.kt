@@ -3,6 +3,7 @@ package com.example.player.service
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import com.example.domain.DEFAULT_INT
 import com.example.domain.DispatchersProvider
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -59,10 +60,10 @@ class MusicServiceHandler @Inject constructor(
         when (musicPlayerEvent) {
             MusicPlayerEvent.Backward -> player.seekBack()
             MusicPlayerEvent.Forward -> player.seekForward()
-            MusicPlayerEvent.SeekToNext -> player.seekToNext()
+            MusicPlayerEvent.SeekToNext -> selectMusic(selectedMusicIndex = player.currentMediaItemIndex.let { if (it < player.mediaItemCount - 1) it + 1 else DEFAULT_INT })
             MusicPlayerEvent.PlayPause -> playOrPause()
             MusicPlayerEvent.Stop -> stopProgressUpdate()
-            is MusicPlayerEvent.SeekBack -> selectMusic(selectedMusicIndex = if (player.currentMediaItemIndex > 0) player.currentMediaItemIndex - 1 else musicPlayerEvent.lastIndex)
+            is MusicPlayerEvent.SeekBack -> selectMusic(selectedMusicIndex = player.currentMediaItemIndex.let { if (it > 0) player.currentMediaItemIndex - 1 else musicPlayerEvent.lastIndex })
             is MusicPlayerEvent.SeekTo -> player.seekTo(musicPlayerEvent.seekToPosition)
             is MusicPlayerEvent.UpdateProgress -> player.seekTo((player.duration * musicPlayerEvent.newProgress).toLong())
             is MusicPlayerEvent.SelectedMusicChange -> when (musicPlayerEvent.selectedMusicIndex) {
@@ -89,9 +90,10 @@ class MusicServiceHandler @Inject constructor(
     }
 
     private suspend fun startProgressUpdate() = job.run {
-        while (true) {
+        while (player.isPlaying) {
             delay(DELAY_TIME_MILLIS)
             _musicState.tryEmit(MusicState.Progress(player.currentPosition))
+            _musicState.tryEmit(MusicState.CurrentPlaying(mediaItemIndex = player.currentMediaItemIndex))
         }
     }
 
