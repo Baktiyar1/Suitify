@@ -227,6 +227,7 @@ open class HomeViewModel @Inject constructor(
     private fun getAdapterItemPosition(id: Long) {
         musics.value.forEachIndexed { index, music ->
             if (music.musicId == id) {
+                _playingMusic.tryEmit(music)
                 mediaItemIndex = index
                 return
             }
